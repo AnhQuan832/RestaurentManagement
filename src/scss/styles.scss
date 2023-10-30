@@ -1,0 +1,85 @@
+/* You can add global styles to this file, and also import other style files */
+// If you want to override variables do it here
+@import "variables";
+
+$enable-ltr: true;
+$enable-rtl: true;
+
+// Import styles with default layout.
+@import "@coreui/coreui/scss/coreui";
+
+// Import Chart.js custom tooltips styles
+@import "@coreui/chartjs/scss/coreui-chartjs";
+
+// perfect scrollbar theming for use with [perfectScrollbar] directive
+//@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+
+@import "layout";
+
+// Some temp fixes
+@import "fixes";
+
+// Prism.js
+@import "examples";
+
+// If you want to add something do it here
+@import "custom";
+
+@import "~primeicons/primeicons.css";
+@import "~primeng/resources/primeng.min.css";
+@import "~primeng/resources/themes/nova/theme.css";
+
+:root {
+  --primary-color: #7a3d26;
+  --offwhite-color: #fafafa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  .sidebar {
+    background-color: #e68117;
+  }
+  .btn-primary {
+    border-radius: 10px;
+    max-height: 60px;
+    min-height: 40px;
+    height: 6vh;
+    width: 20vw;
+    background-color: var(--primary-color);
+    border: none;
+  }
+  .btn-secondary {
+    border-radius: 10px;
+    max-height: 60px;
+    min-height: 40px;
+    height: 6vh;
+    width: 20vw;
+    background-color: var(--offwhite-color);
+    border: solid 3px var(--primary-color);
+    color: var(--primary-color);
+  }
+  .p-divider.p-divider-horizontal {
+    .p-divider-content {
+      background-color: transparent;
+    }
+  }
+  .p-toast .p-toast-message {
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    min-width: fit-content;
+
+    .p-toast-message-content {
+      padding: 1rem;
+      .p-toast-message-success {
+        background-color: rgb(102, 228, 140);
+      }
+      .p-toast-message-alert {
+        background-color: rgb(231, 177, 77);
+      }
+      .p-toast-message-info {
+        background-color: rgb(73, 154, 239);
+      }
+      .p-toast-message-danger {
+        background-color: rgb(230, 94, 56);
+      }
+    }
+  }
+}

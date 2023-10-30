@@ -1,0 +1,42 @@
+<!--sidebar-->
+<c-sidebar
+  #sidebar="cSidebar"
+  class="d-print-none sidebar sidebar-fixed"
+  id="sidebar"
+  visible
+>
+  <c-sidebar-brand
+    [brandFull]="{
+      src: 'https://firebasestorage.googleapis.com/v0/b/advance-totem-350103.appspot.com/o/Logo%2Fleft_logo.png?alt=media&token=80cf0dca-c9c0-4e79-9fc1-2ddd8e90909d',
+      width: 200,
+      alt: 'Pescue Logo'
+    }"
+  >
+  </c-sidebar-brand>
+  <perfect-scrollbar [config]="perfectScrollbarConfig">
+    <c-sidebar-nav [navItems]="navItems" dropdownMode="close"> </c-sidebar-nav>
+  </perfect-scrollbar>
+  <!-- <c-sidebar-toggler
+    *ngIf="!sidebar.narrow"
+    toggle="unfoldable"
+    cSidebarToggle="sidebar"
+  ></c-sidebar-toggler> -->
+</c-sidebar>
+
+<!--main-->
+<div class="wrapper d-flex flex-column min-vh-100 bg-light dark:bg-transparent">
+  <!--app-header-->
+  <app-default-header
+    class="mb-4 d-print-none header header-sticky"
+    position="sticky"
+    sidebarId="sidebar"
+  ></app-default-header>
+  <!--app-body-->
+  <div class="body flex-grow-1 px-3">
+    <c-container breakpoint="lg" class="h-auto">
+      <router-outlet></router-outlet>
+    </c-container>
+  </div>
+  <!--app footer-->
+  <!-- <app-default-footer></app-default-footer> -->
+</div>

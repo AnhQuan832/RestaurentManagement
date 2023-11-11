@@ -7,16 +7,35 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-speedometer' }
 
   },
-  // {
-  //   name: 'Nhận nuôi',
-  //   url: 'pages/adoption-request',
-  //   iconComponent: { name: 'cil-dog' }
-  // },
-  // {
-  //   name: 'Đăng ký trại',
-  //   url: 'pages/shelter-request',
-  //   iconComponent: { name: 'cil-user-plus' }
-  // },
+  {
+    name: 'Menu',
+    url: 'pages/menu',
+    iconComponent: { name: 'cil-dog' }
+  },
+  {
+    name: 'Order',
+    url: 'pages/order',
+    iconComponent: { name: 'cil-speedometer' }
+
+  },
+  {
+    name: 'Table',
+    url: 'pages/table',
+    iconComponent: { name: 'cil-speedometer' }
+
+  },
+  {
+    name: 'Staff',
+    url: 'pages/staff',
+    iconComponent: { name: 'cil-speedometer' }
+
+  },
+  {
+    name: 'Statistic',
+    url: 'pages/statistic',
+    iconComponent: { name: 'cil-speedometer' }
+
+  },
   // {
   //   name: 'Quỹ cứu trợ',
   //   iconComponent: { name: 'cil-chart-pie' },

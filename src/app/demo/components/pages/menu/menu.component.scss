@@ -1,0 +1,103 @@
+.h1{
+font-family: Poppins;
+font-size: 24px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+.custom-search {
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.custom-search input {
+  border: 1px solid #ccc; 
+  padding: 5px; 
+  border-radius: 4px; 
+  margin-right: 5px; 
+  height: 40px;
+  
+}
+
+.custom-search i {
+  margin-top: 8px; 
+  color: #666; 
+}
+
+  
+  label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+  }
+  
+  button:hover {
+    background-color: transparent !important;
+    border: none !important;
+    color: inherit !important;
+  }
+  
+  button .pi:hover {
+    border: none !important;
+  }
+  
+
+/* CSS tùy chỉnh cho modal */
+::ng-deep .ui-dialog .ui-dialog-content {
+  padding: 1em; /* Đặt padding theo ý muốn */
+}
+
+::ng-deep .ui-dialog .ui-dialog-footer {
+  text-align: right; /* Đưa footer về phía bên phải */
+}
+
+::ng-deep .ui-dialog .ui-dialog-titlebar {
+  background-color: #007ad9; /* Đặt màu nền cho titlebar */
+  color: #fff; /* Đặt màu chữ cho titlebar */
+  border: none; /* Loại bỏ đường viền của titlebar */
+}
+
+/* CSS tùy chỉnh cho nút đóng modal */
+::ng-deep .ui-dialog .ui-dialog-titlebar-icon {
+  display: none; /* Ẩn biểu tượng đóng trên titlebar */
+}
+
+::ng-deep .ui-dialog .ui-dialog-footer button {
+  margin-left: 0.25em; /* Đặt khoảng cách giữa các nút trong footer */
+}
+
+/* CSS tùy chỉnh cho sidebar */
+p-sidebar {
+  width: 400px;
+}
+
+/* CSS */
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.form-group label {
+  width: 120px; /* Đặt chiều rộng mong muốn của label */
+  margin-right: 10px; /* Đặt khoảng cách giữa label và input */
+}
+
+.form-group input {
+  flex: 1; /* Chia đều chiều rộng của input còn lại */
+}
+
+.button-group {
+  margin-top: 15px;
+  text-align: right;
+}
+
+
+

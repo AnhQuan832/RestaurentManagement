@@ -21,12 +21,10 @@ import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { OrderComponent } from './order.component';
-
+import { DataViewModule } from 'primeng/dataview';
 
 @NgModule({
-    declarations: [
-        OrderComponent
-    ],
+    declarations: [OrderComponent],
     imports: [
         CommonModule,
         OrderRoutingModule,
@@ -49,8 +47,10 @@ import { OrderComponent } from './order.component';
         DividerModule,
         ReactiveFormsModule,
         FormsModule,
-        TooltipModule, DialogModule
+        TooltipModule,
+        DialogModule,
+        DataViewModule,
     ],
-    providers: [MessageService, DialogService]
+    providers: [MessageService, DialogService],
 })
-export class OrderModule { }
+export class OrderModule {}

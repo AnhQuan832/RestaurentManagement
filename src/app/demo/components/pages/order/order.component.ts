@@ -5,11 +5,11 @@ import { DynamicDialogRef, DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { Product } from 'src/app/demo/api/product';
 import { StorageService } from 'src/app/services/storage.service';
-
+import { DataView } from 'primeng/dataview';
 @Component({
     selector: 'app-order',
     templateUrl: './order.component.html',
-    styleUrls: ['./order.component.scss']
+    styleUrls: ['./order.component.scss'],
 })
 export class OrderComponent {
     productDialog: boolean = false;
@@ -20,126 +20,157 @@ export class OrderComponent {
 
     tables: any[] = [
         {
-            status: "Available",
-            name: "Table 1",
+            status: 'Available',
+            name: 'Table 1',
             capacity: 4,
-            tableId: 1
+            tableId: 1,
         },
         {
-            status: "Occupied",
-            name: "Table 2",
+            status: 'Occupied',
+            name: 'Table 2',
             capacity: 2,
-            tableId: 2
+            tableId: 2,
         },
         {
-            status: "Reserved",
-            name: "Table 3",
+            status: 'Reserved',
+            name: 'Table 3',
             capacity: 6,
-            tableId: 3
+            tableId: 3,
         },
         {
-            status: "Available",
-            name: "Table 4",
+            status: 'Available',
+            name: 'Table 4',
             capacity: 4,
-            tableId: 4
+            tableId: 4,
         },
         {
-            status: "Occupied",
-            name: "Table 5",
+            status: 'Occupied',
+            name: 'Table 5',
             capacity: 2,
-            tableId: 5
+            tableId: 5,
         },
         {
-            status: "Reserved",
-            name: "Table 6",
+            status: 'Reserved',
+            name: 'Table 6',
             capacity: 6,
-            tableId: 6
+            tableId: 6,
         },
         {
-            status: "Available",
-            name: "Table 7",
+            status: 'Available',
+            name: 'Table 7',
             capacity: 4,
-            tableId: 7
+            tableId: 7,
         },
         {
-            status: "Occupied",
-            name: "Table 8",
+            status: 'Occupied',
+            name: 'Table 8',
             capacity: 2,
-            tableId: 8
+            tableId: 8,
         },
         {
-            status: "Reserved",
-            name: "Table 9",
+            status: 'Reserved',
+            name: 'Table 9',
             capacity: 6,
-            tableId: 9
+            tableId: 9,
         },
         {
-            status: "Available",
-            name: "Table 10",
+            status: 'Available',
+            name: 'Table 10',
             capacity: 4,
-            tableId: 10
+            tableId: 10,
         },
         {
-            status: "Occupied",
-            name: "Table 11",
+            status: 'Occupied',
+            name: 'Table 11',
             capacity: 2,
-            tableId: 11
+            tableId: 11,
         },
         {
-            status: "Reserved",
-            name: "Table 12",
+            status: 'Reserved',
+            name: 'Table 12',
             capacity: 6,
-            tableId: 12
+            tableId: 12,
         },
         {
-            status: "Available",
-            name: "Table 13",
+            status: 'Available',
+            name: 'Table 13',
             capacity: 4,
-            tableId: 13
+            tableId: 13,
         },
         {
-            status: "Occupied",
-            name: "Table 14",
+            status: 'Occupied',
+            name: 'Table 14',
             capacity: 2,
-            tableId: 14
+            tableId: 14,
         },
         {
-            status: "Reserved",
-            name: "Table 15",
+            status: 'Reserved',
+            name: 'Table 15',
             capacity: 6,
-            tableId: 15
+            tableId: 15,
         },
         {
-            status: "Available",
-            name: "Table 16",
+            status: 'Available',
+            name: 'Table 16',
             capacity: 4,
-            tableId: 16
+            tableId: 16,
         },
         {
-            status: "Occupied",
-            name: "Table 17",
+            status: 'Occupied',
+            name: 'Table 17',
             capacity: 2,
-            tableId: 17
+            tableId: 17,
         },
         {
-            status: "Reserved",
-            name: "Table 18",
+            status: 'Reserved',
+            name: 'Table 18',
             capacity: 6,
-            tableId: 18
+            tableId: 18,
         },
         {
-            status: "Available",
-            name: "Table 19",
+            status: 'Available',
+            name: 'Table 19',
             capacity: 4,
-            tableId: 19
+            tableId: 19,
         },
         {
-            status: "Occupied",
-            name: "Table 20",
+            status: 'Occupied',
+            name: 'Table 20',
             capacity: 2,
-            tableId: 20
-        }
-    ]
+            tableId: 20,
+        },
+    ];
+
+    sampleFoodData = [
+        {
+            food_id: 1,
+            category: 'Main Course',
+            name: 'Spaghetti Bolognese',
+            price: 12.99,
+            recipe: 'Delicious spaghetti with rich Bolognese sauce.',
+            image: 'spaghetti.jpg',
+            status: 'Available',
+        },
+        {
+            food_id: 2,
+            category: 'Appetizer',
+            name: 'Caesar Salad',
+            price: 8.99,
+            recipe: 'Fresh romaine lettuce with Caesar dressing, croutons, and parmesan cheese.',
+            image: 'caesar_salad.jpg',
+            status: 'Available',
+        },
+        {
+            food_id: 3,
+            category: 'Dessert',
+            name: 'Chocolate Cake',
+            price: 6.99,
+            recipe: 'Decadent chocolate cake with a rich and moist texture.',
+            image: 'chocolate_cake.jpg',
+            status: 'Available',
+        },
+        // Add more food items as needed
+    ];
 
     product: any = {};
 
@@ -147,72 +178,57 @@ export class OrderComponent {
 
     submitted: boolean = false;
 
-    cols: any[] = [];
-
-    statuses: any[] = [];
-
     rowsPerPageOptions = [5, 10, 20];
 
     ref: DynamicDialogRef;
+    showServing: boolean = true;
     constructor(
         private router: Router,
         private dialogService: DialogService,
         private storageSerive: StorageService,
-        private messageService: MessageService) { }
+        private messageService: MessageService
+    ) {}
 
-    ngOnInit() {
-
-        this.cols = [
-            { field: 'product', header: 'Product' },
-            { field: 'price', header: 'Price' },
-            { field: 'category', header: 'Category' },
-            { field: 'rating', header: 'Reviews' },
-            { field: 'inventoryStatus', header: 'Status' }
-        ];
-
-        this.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
-        ];
-    }
-
-
-
-
-    getSeverity(status: string) {
-        switch (status) {
-            case 'COMPLETED':
-                return 'success';
-            case 'PENDING':
-                return 'info';
-            default:
-                return 'danger';
-        }
-    }
+    ngOnInit() {}
 
     onRowSelect(data) {
-        this.storageSerive.setItemLocal("currentProduct", data);
-        this.router.navigate([`pages/product/product-detail/${data.productId}`])
+        this.storageSerive.setItemLocal('currentProduct', data);
+        this.router.navigate([
+            `pages/product/product-detail/${data.productId}`,
+        ]);
     }
 
     public showToast(message, type) {
-        this.messageService.add({ key: 'toast', severity: type, detail: message })
+        this.messageService.add({
+            key: 'toast',
+            severity: type,
+            detail: message,
+        });
     }
-
-
 
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
-        this.tables = this.tables.filter(val => !this.selectedProducts.includes(val));
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+        this.tables = this.tables.filter(
+            (val) => !this.selectedProducts.includes(val)
+        );
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Products Deleted',
+            life: 3000,
+        });
         this.selectedProducts = [];
     }
 
     confirmDelete() {
         this.deleteProductDialog = false;
-        this.tables = this.tables.filter(val => val.id !== this.product.id);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+        this.tables = this.tables.filter((val) => val.id !== this.product.id);
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Product Deleted',
+            life: 3000,
+        });
         this.product = {};
     }
 
@@ -220,7 +236,6 @@ export class OrderComponent {
         this.productDialog = false;
         this.submitted = false;
     }
-
 
     findIndexById(id: string): number {
         let index = -1;
@@ -234,11 +249,16 @@ export class OrderComponent {
         return index;
     }
 
-    createOrder() {
-
-    }
+    createOrder() {}
 
     onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+        table.filterGlobal(
+            (event.target as HTMLInputElement).value,
+            'contains'
+        );
+    }
+
+    onFilter(dv: DataView, event: Event) {
+        dv.filter((event.target as HTMLInputElement).value);
     }
 }

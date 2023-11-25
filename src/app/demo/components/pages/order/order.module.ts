@@ -22,6 +22,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { OrderComponent } from './order.component';
 import { DataViewModule } from 'primeng/dataview';
+import { TabViewModule } from 'primeng/tabview';
+import { PanelModule } from 'primeng/panel';
 
 @NgModule({
     declarations: [OrderComponent],
@@ -50,6 +52,8 @@ import { DataViewModule } from 'primeng/dataview';
         TooltipModule,
         DialogModule,
         DataViewModule,
+        TabViewModule,
+        PanelModule,
     ],
     providers: [MessageService, DialogService],
 })

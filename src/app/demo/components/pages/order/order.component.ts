@@ -145,7 +145,7 @@ export class OrderComponent {
         {
             food_id: 1,
             category: 'Main Course',
-            name: 'Spaghetti Bolognese',
+            name: 'Spaghetti',
             price: 12.99,
             recipe: 'Delicious spaghetti with rich Bolognese sauce.',
             image: 'spaghetti.jpg',
@@ -259,6 +259,6 @@ export class OrderComponent {
     }
 
     onFilter(dv: DataView, event: Event) {
-        dv.filter((event.target as HTMLInputElement).value);
+        dv.filter((event.target as HTMLInputElement).value, 'contains');
     }
 }

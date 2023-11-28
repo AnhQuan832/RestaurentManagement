@@ -1,138 +1,137 @@
 <!-- Thanh tìm kiếm tùy chỉnh -->
 <div class="grid">
-  <div class="col-12">
-      <div class="card px-6 py-6">
-        <p-button label="Add new dish" icon="pi pi-plus" style="margin-bottom: 10px;" (click)="showDialog()" ></p-button>
-        <div class="d-flex justify-between align-items-center">
-          <h1 style="margin-right: auto;">List dish</h1> <!-- Add margin-right: auto; to push it to the left -->
-          <div class="custom-search">
-            <span class="block mt-0 md:mt-0 p-input-icon-left" >
-              <input
-                pInputText
-                type="text"
-                (input)="onGlobalFilter(dt, $event)"            
-                placeholder="Search..."
-                class="w-full sm:w-auto"
-              />
-            </span>
-          </div>
-        </div>   
-        <p-table [value]="yourData" [paginator]="true" [rows]="10">
-          <caption>List dish</caption>
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Dish name</th>
-              <th>Type</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Actions</th>
-              <th>Approved</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-row>
-            <tr *ngIf="matchesSearch(row)">
-              <td>{{ row.dishName }}</td>
-              <td>{{ row.type }}</td>
-              <td>{{ row.price | currency:'USD':'symbol':'1.2-2' }}</td>
-              <td>{{ row.status }}</td>
-              <td>
-                <button pButton type="button" icon="pi pi-pencil" (click)="viewDetails(row)"></button>
-              </td>
-              <td>
-                <button pButton type="button" icon="pi pi-check" (click)="approveDish(row)"></button>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-  </div>
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Add new dish" icon="pi pi-plus" (click)="showDialog()"
+                            class="p-button-success" [disabled]="
+                                            !selectedProducts || !selectedProducts.length
+                                        "></button>
+                    </div>
+                </ng-template>
+
+
+            </p-toolbar>
+
+            <p-table [value]="yourData" [paginator]="true" [rows]="10">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">List Dish</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                class="w-full sm:w-auto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Dish name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                        <th>Approved</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr *ngIf="matchesSearch(row)">
+                        <td>{{ row.dishName }}</td>
+                        <td>{{ row.type }}</td>
+                        <td>{{ row.price | currency:'USD':'symbol':'1.2-2' }}</td>
+                        <td>{{ row.status }}</td>
+                        <td>
+                            <button pButton type="button" icon="pi pi-pencil" (click)="viewDetails(row)"></button>
+                        </td>
+                        <td>
+                            <button pButton type="button" icon="pi pi-check" (click)="approveDish(row)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
 </div>
 
 <p-dialog header="Add Dish" [(visible)]="displayDialog" [modal]="true">
-  <div class="form-group">
-    <label for="dishName">Dish Name:</label>
-    <input pInputText type="text" [(ngModel)]="newDish.dishName" id="dishName" />
-  </div>
-  <div class="form-group">
-    <label for="type">Type:</label>
-    <input pInputText type="text" [(ngModel)]="newDish.type" id="type" />
-  </div>
-  <div class="form-group">
-    <label for="price">Price:</label>
-    <input pInputText type="number" [(ngModel)]="newDish.price" id="price" />
-  </div>
-  <div class="form-group">
-    <label for="status">Status:</label>
-    <input pInputText type="text" [(ngModel)]="newDish.status" id="status" />
-  </div>
-  <!-- Thêm các trường khác nếu cần -->
-  <div class="button-group" style="display: flex; justify-content: space-between;">
-    <button pButton type="button" label="Save" (click)="saveDish()" style="margin-right:auto;"></button>
-    <button pButton type="button" label="Cancel" (click)="cancelDish()"></button>
-  </div>  
+    <div class="form-group">
+        <label for="dishName">Dish Name:</label>
+        <input pInputText type="text" [(ngModel)]="newDish.dishName" id="dishName" />
+    </div>
+    <div class="form-group">
+        <label for="type">Type:</label>
+        <input pInputText type="text" [(ngModel)]="newDish.type" id="type" />
+    </div>
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input pInputText type="number" [(ngModel)]="newDish.price" id="price" />
+    </div>
+    <div class="form-group">
+        <label for="status">Status:</label>
+        <input pInputText type="text" [(ngModel)]="newDish.status" id="status" />
+    </div>
+    <!-- Thêm các trường khác nếu cần -->
+    <div class="button-group" style="display: flex; justify-content: space-between;">
+        <button pButton type="button" label="Save" (click)="saveDish()" style="margin-right:auto;"></button>
+        <button pButton type="button" label="Cancel" (click)="cancelDish()"></button>
+    </div>
 </p-dialog>
 
 
 
-  
+
 <p-sidebar [(visible)]="displaySidebar" [position]="'right'" [blockScroll]="true">
-  <ng-container *ngIf="selectedDish">
-    <!-- Các thông tin chi tiết của món ăn -->
-    <div>
-      <label>Dish Name:</label>
-      <div>{{ selectedDish.dishName }}</div>
-    </div>
-    <div>
-      <label>Type:</label>
-      <div>{{ selectedDish.type }}</div>
-    </div>
-    <div>
-      <label>Price:</label>
-      <div>{{ selectedDish.price | currency:'USD':'symbol':'1.2-2' }}</div>
-    </div>
-    <div>
-      <label>Status:</label>
-      <div>{{ selectedDish.status }}</div>
-    </div>
-    
+    <ng-template pTemplate="header">
+        <p-button label="Save" (click)="saveEditedDish()"></p-button>
+    </ng-template>
+    <ng-container *ngIf="selectedDish">
+        <!-- Các thông tin chi tiết của món ăn -->
+        <div class="row-type">
+            <label>Dish Name:</label>
+            <div>{{ selectedDish.dishName }}</div>
+        </div>
+        <div class="row-type">
+            <label>Type:</label>
+            <div>{{ selectedDish.type }}</div>
+        </div>
+        <div class="row-type">
+            <label>Price:</label>
+            <div>{{ selectedDish.price | currency:'USD':'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="row-type">
+            <label>Status:</label>
+            <div>{{ selectedDish.status }}</div>
+        </div>
 
-    <div class="button-group" style="display: flex; gap: 10px;">
-      <!-- Nút Edit -->
-      <p-button label="Edit" icon="pi pi-pencil" style="margin-bottom: 10px;" (click)="editDish()"></p-button>
-      
-
-      <p-button label="Delete" icon="pi pi-trash" style="margin-bottom: 10px;" (click)="deleteDish()"></p-button>
-    </div>
-  </ng-container>
+        <!--
+        <div class="button-group" style="display: flex; gap: 10px;">
+            <p-button label="Edit" icon="pi pi-pencil" (click)="editDish()"></p-button>
 
 
-  <div *ngIf="editingDish">
-    <div>
-      <label for="dishName">Dish Name:</label>
-      <input pInputText type="text" [(ngModel)]="editingDish.dishName" id="dishName" />
-    </div>
-    <div>
-      <label for="type">Type:</label>
-      <input pInputText type="text" [(ngModel)]="editingDish.type" id="type" />
-    </div>
-    <div>
-      <label for="price">Price:</label>
-      <input pInputText type="number" [(ngModel)]="editingDish.price" id="price" />
-    </div>
-    <div>
-      <label for="status">Status:</label>
-      <input pInputText type="text" [(ngModel)]="editingDish.status" id="status" />
-    </div>
-    <div class="button-group" style="display: flex; gap: 10px;">
-      <p-button label="Save" (click)="saveEditedDish()"></p-button>
+            <p-button label="Delete" icon="pi pi-trash" (click)="deleteDish()"></p-button>
+        </div> -->
+    </ng-container>
 
-      <p-button label="Cancel" (click)="cancelEdit()"></p-button>
+
+    <div *ngIf="editingDish">
+        <div class="row-type">
+            <label for="dishName">Dish Name:</label>
+            <input pInputText type="text" [(ngModel)]="editingDish.dishName" id="dishName" />
+        </div>
+        <div class="row-type">
+            <label for="type">Type:</label>
+            <input pInputText type="text" [(ngModel)]="editingDish.type" id="type" />
+        </div>
+        <div class="row-type">
+            <label for="price">Price:</label>
+            <input pInputText type="number" [(ngModel)]="editingDish.price" id="price" />
+        </div>
+        <div class="row-type">
+            <label for="status">Status:</label>
+            <input pInputText type="text" [(ngModel)]="editingDish.status" id="status" />
+        </div>
+
     </div>
-  </div>
 </p-sidebar>
-
-
-
-
-
-

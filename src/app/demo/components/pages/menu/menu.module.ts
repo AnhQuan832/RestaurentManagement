@@ -9,22 +9,20 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SidebarModule } from 'primeng/sidebar';
 import { ButtonModule } from 'primeng/button';
+import { ToolbarModule } from 'primeng/toolbar';
 
 @NgModule({
-  declarations: [
-    MenuComponent,
-  ],
-  imports: [
-    CommonModule,
-    MenuRoutingModule,
-    TableModule,
-    FormsModule,
-    InputTextModule,
-    DialogModule,
-    SidebarModule,
-    ButtonModule,
-    
-  ]
-
+    declarations: [MenuComponent],
+    imports: [
+        CommonModule,
+        MenuRoutingModule,
+        TableModule,
+        FormsModule,
+        InputTextModule,
+        DialogModule,
+        SidebarModule,
+        ButtonModule,
+        ToolbarModule,
+    ],
 })
-export class MenuModule { }
+export class MenuModule {}

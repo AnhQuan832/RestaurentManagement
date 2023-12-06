@@ -24,6 +24,7 @@ import { OrderComponent } from './order.component';
 import { DataViewModule } from 'primeng/dataview';
 import { TabViewModule } from 'primeng/tabview';
 import { PanelModule } from 'primeng/panel';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
     declarations: [OrderComponent],
@@ -54,6 +55,7 @@ import { PanelModule } from 'primeng/panel';
         DataViewModule,
         TabViewModule,
         PanelModule,
+        TagModule,
     ],
     providers: [MessageService, DialogService],
 })

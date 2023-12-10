@@ -17,7 +17,11 @@ export class OrderComponent {
     deleteProductDialog: boolean = false;
 
     deleteProductsDialog: boolean = false;
-
+    statuses = [
+        { label: 'Available', value: 'Available' },
+        { label: 'Occupied', value: 'Occupied' },
+        { label: 'Preparing', value: 'Preparing' },
+    ];
     tables: any[] = [
         {
             status: 'Available',
@@ -32,7 +36,7 @@ export class OrderComponent {
             tableId: 2,
         },
         {
-            status: 'Reserved',
+            status: 'Preparing',
             name: 'Table 3',
             capacity: 6,
             tableId: 3,
@@ -50,7 +54,7 @@ export class OrderComponent {
             tableId: 5,
         },
         {
-            status: 'Reserved',
+            status: 'Preparing',
             name: 'Table 6',
             capacity: 6,
             tableId: 6,
@@ -68,7 +72,7 @@ export class OrderComponent {
             tableId: 8,
         },
         {
-            status: 'Reserved',
+            status: 'Preparing',
             name: 'Table 9',
             capacity: 6,
             tableId: 9,
@@ -86,7 +90,7 @@ export class OrderComponent {
             tableId: 11,
         },
         {
-            status: 'Reserved',
+            status: 'Preparing',
             name: 'Table 12',
             capacity: 6,
             tableId: 12,
@@ -104,7 +108,7 @@ export class OrderComponent {
             tableId: 14,
         },
         {
-            status: 'Reserved',
+            status: 'Preparing',
             name: 'Table 15',
             capacity: 6,
             tableId: 15,
@@ -122,7 +126,7 @@ export class OrderComponent {
             tableId: 17,
         },
         {
-            status: 'Reserved',
+            status: 'Preparing',
             name: 'Table 18',
             capacity: 6,
             tableId: 18,
@@ -158,6 +162,42 @@ export class OrderComponent {
             price: 8.99,
             recipe: 'Fresh romaine lettuce with Caesar dressing, croutons, and parmesan cheese.',
             image: 'caesar_salad.jpg',
+            status: 'Available',
+        },
+        {
+            food_id: 3,
+            category: 'Dessert',
+            name: 'Chocolate Cake',
+            price: 6.99,
+            recipe: 'Decadent chocolate cake with a rich and moist texture.',
+            image: 'chocolate_cake.jpg',
+            status: 'Available',
+        },
+        {
+            food_id: 3,
+            category: 'Dessert',
+            name: 'Chocolate Cake',
+            price: 6.99,
+            recipe: 'Decadent chocolate cake with a rich and moist texture.',
+            image: 'chocolate_cake.jpg',
+            status: 'Available',
+        },
+        {
+            food_id: 3,
+            category: 'Dessert',
+            name: 'Chocolate Cake',
+            price: 6.99,
+            recipe: 'Decadent chocolate cake with a rich and moist texture.',
+            image: 'chocolate_cake.jpg',
+            status: 'Available',
+        },
+        {
+            food_id: 3,
+            category: 'Dessert',
+            name: 'Chocolate Cake',
+            price: 6.99,
+            recipe: 'Decadent chocolate cake with a rich and moist texture.',
+            image: 'chocolate_cake.jpg',
             status: 'Available',
         },
         {
@@ -260,5 +300,29 @@ export class OrderComponent {
 
     onFilter(dv: DataView, event: Event) {
         dv.filter((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    getSeverity(status) {
+        switch (status) {
+            case 'Preparing':
+                return 'Warning';
+            case 'Occupied':
+                return 'danger';
+            default:
+                return 'success';
+        }
+    }
+
+    onChangeTab($event) {
+        console.log($event.index);
+    }
+
+    onAddDish(event) {
+        console.log(event);
+        this.messageService.add({
+            key: 'toast',
+            severity: 'success',
+            detail: 'Added to bill',
+        });
     }
 }

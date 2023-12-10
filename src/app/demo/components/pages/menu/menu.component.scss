@@ -112,10 +112,27 @@ p-sidebar {
 
 .row-type {
     display: flex;
-    margin-top: 0.5rem;
+    margin-top: 2rem;
     > div,
-    input {
+    input,
+    .p-inputwrapper,
+    .p-dropdown {
         position: absolute;
         left: 160px;
+        width: 250px !important;
+        height: 32px;
+    }
+}
+
+:host::ng-deep {
+    .p-dropdown,
+    .p-inputnumber-input {
+        height: 32px !important;
+        width: 250px !important;
+    }
+    .p-inputtext,
+    .p-dropdown-label {
+        display: flex !important;
+        align-items: center;
     }
 }

@@ -1,17 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogRef, DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
-import { Product } from 'src/app/demo/api/product';
 import { StorageService } from 'src/app/services/storage.service';
 import { DataView } from 'primeng/dataview';
+import { MenuService } from 'src/app/services/menu.service';
+import { OrderService } from 'src/app/services/order.service';
+import { forkJoin } from 'rxjs';
 @Component({
     selector: 'app-order',
     templateUrl: './order.component.html',
     styleUrls: ['./order.component.scss'],
 })
-export class OrderComponent {
+export class OrderComponent implements OnInit {
     productDialog: boolean = false;
 
     deleteProductDialog: boolean = false;
@@ -145,73 +147,8 @@ export class OrderComponent {
         },
     ];
 
-    sampleFoodData = [
-        {
-            food_id: 1,
-            category: 'Main Course',
-            name: 'Spaghetti',
-            price: 12.99,
-            recipe: 'Delicious spaghetti with rich Bolognese sauce.',
-            image: 'spaghetti.jpg',
-            status: 'Available',
-        },
-        {
-            food_id: 2,
-            category: 'Appetizer',
-            name: 'Caesar Salad',
-            price: 8.99,
-            recipe: 'Fresh romaine lettuce with Caesar dressing, croutons, and parmesan cheese.',
-            image: 'caesar_salad.jpg',
-            status: 'Available',
-        },
-        {
-            food_id: 3,
-            category: 'Dessert',
-            name: 'Chocolate Cake',
-            price: 6.99,
-            recipe: 'Decadent chocolate cake with a rich and moist texture.',
-            image: 'chocolate_cake.jpg',
-            status: 'Available',
-        },
-        {
-            food_id: 3,
-            category: 'Dessert',
-            name: 'Chocolate Cake',
-            price: 6.99,
-            recipe: 'Decadent chocolate cake with a rich and moist texture.',
-            image: 'chocolate_cake.jpg',
-            status: 'Available',
-        },
-        {
-            food_id: 3,
-            category: 'Dessert',
-            name: 'Chocolate Cake',
-            price: 6.99,
-            recipe: 'Decadent chocolate cake with a rich and moist texture.',
-            image: 'chocolate_cake.jpg',
-            status: 'Available',
-        },
-        {
-            food_id: 3,
-            category: 'Dessert',
-            name: 'Chocolate Cake',
-            price: 6.99,
-            recipe: 'Decadent chocolate cake with a rich and moist texture.',
-            image: 'chocolate_cake.jpg',
-            status: 'Available',
-        },
-        {
-            food_id: 3,
-            category: 'Dessert',
-            name: 'Chocolate Cake',
-            price: 6.99,
-            recipe: 'Decadent chocolate cake with a rich and moist texture.',
-            image: 'chocolate_cake.jpg',
-            status: 'Available',
-        },
-        // Add more food items as needed
-    ];
-
+    listFood;
+    category;
     product: any = {};
 
     selectedProducts: any[] = [];
@@ -226,10 +163,26 @@ export class OrderComponent {
         private router: Router,
         private dialogService: DialogService,
         private storageSerive: StorageService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private menuService: MenuService,
+        private orderService: OrderService
     ) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.getData();
+    }
+
+    getData() {
+        forkJoin([
+            this.menuService.getMenu(),
+            this.menuService.getListCategory(),
+        ]).subscribe({
+            next: (res) => {
+                this.listFood = res[0];
+                this.category = res[1];
+            },
+        });
+    }
 
     onRowSelect(data) {
         this.storageSerive.setItemLocal('currentProduct', data);
@@ -324,5 +277,10 @@ export class OrderComponent {
             severity: 'success',
             detail: 'Added to bill',
         });
+    }
+
+    getCategoryName(id) {
+        const cate = this.category.find((cate) => cate.categoryId === id);
+        return cate ? cate.categoryName : '';
     }
 }

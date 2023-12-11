@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -17,7 +17,7 @@ import { LoginService } from 'src/app/services/login.service';
         `,
     ],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     valCheck: string[] = ['remember'];
 
     password!: string;
@@ -29,6 +29,9 @@ export class LoginComponent {
         private loginService: LoginService,
         private router: Router
     ) {}
+    ngOnInit(): void {
+        sessionStorage.clear();
+    }
 
     login() {
         this.router.navigate(['']);

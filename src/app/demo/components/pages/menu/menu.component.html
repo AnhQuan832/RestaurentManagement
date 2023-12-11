@@ -44,11 +44,11 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Dish name</th>
+                        <th [width]="'30%'">Dish name</th>
                         <th>Category</th>
                         <th>Price</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th class="text-end">Actions</th>
                         <!-- <th>Approved</th> -->
                     </tr>
                 </ng-template>
@@ -60,22 +60,21 @@
                             {{ row.price | currency : "VND" }}
                         </td>
                         <td>{{ row.status }}</td>
-                        <td>
+                        <td class="text-end">
                             <button
+                                class="me-4"
                                 pButton
                                 type="button"
                                 icon="pi pi-pencil"
                                 (click)="viewDetails(row)"
                             ></button>
-                        </td>
-                        <!-- <td>
                             <button
                                 pButton
                                 type="button"
-                                icon="pi pi-check"
-                                (click)="approveDish(row)"
+                                icon="pi pi-trash"
+                                (click)="deleteFood(row)"
                             ></button>
-                        </td> -->
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>
@@ -91,16 +90,54 @@
     <ng-template pTemplate="header">
         <p-button
             [label]="dish.foodId ? 'Save' : 'Create'"
+            [disabled]="addDish.invalid"
             (click)="saveEditedDish()"
         ></p-button>
     </ng-template>
-    <div *ngIf="displaySidebar">
+    <div
+        *ngIf="displaySidebar"
+        class="position-relative h-75"
+        [formGroup]="addDish"
+    >
+        <div
+            *ngIf="isLoading"
+            class="loading w-100 h-100 position-absolute d-flex d-flex justify-content-center align-items-center flex-column gap-2 bg-body rounded-3 z-3"
+        >
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p style="opacity: 0.7">Loading</p>
+        </div>
+        <div class="avatar d-flex justify-content-center mt-4">
+            <span
+                class="m-4 my-2 rounded-1 d-flex justify-content-center align-items-center"
+            >
+                <label class="custom-file-upload">
+                    <input
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        id="avatarInput"
+                        (change)="selectedAvatar($event)"
+                    />
+                    <img
+                        [src]="
+                            dish.image ||
+                            'https://firebasestorage.googleapis.com/v0/b/advance-totem-350103.appspot.com/o/Avatar%2Fimage-holder-icon.png?alt=media&token=2bc0bac5-ea17-4dd9-8c9e-4813316da679'
+                        "
+                        alt=""
+                        id="imgInput"
+                        class="w-100"
+                    />
+                    <!-- <i class="pi pi-image" style="font-size: 2.5rem"></i> -->
+                </label>
+            </span>
+        </div>
         <div class="row-type">
             <label for="dishName">Dish Name:</label>
             <input
                 pInputText
                 type="text"
-                [(ngModel)]="dish.name"
+                formControlName="name"
                 id="dishName"
             />
         </div>
@@ -110,7 +147,7 @@
                 [options]="category"
                 optionLabel="categoryName"
                 optionValue="categoryId"
-                [(ngModel)]="dish.categoryId"
+                formControlName="categoryId"
                 id="category"
             >
                 <ng-template pTemplate="footer">
@@ -129,7 +166,7 @@
                 mode="currency"
                 currency="VND"
                 type="number"
-                [(ngModel)]="dish.price"
+                formControlName="price"
                 id="price"
                 [min]="0"
                 [max]="9999999"
@@ -141,7 +178,7 @@
             <input
                 pInputText
                 type="text"
-                [(ngModel)]="dish.status"
+                formControlName="status"
                 id="status"
             />
         </div>

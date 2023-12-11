@@ -114,4 +114,19 @@ export class MenuService {
             })
         );
     }
+
+    deleteFood(id) {
+        return this.http.delete(API.FOOD.GET_FOOD + `/${id}`).pipe(
+            map((data: any) => {
+                if (data.statusCode === 200) {
+                    return data.data;
+                } else {
+                    throw new Error(data.meta);
+                }
+            }),
+            catchError((err) => {
+                throw new Error(err);
+            })
+        );
+    }
 }

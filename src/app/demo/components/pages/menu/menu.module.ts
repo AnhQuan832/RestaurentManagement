@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MenuRoutingModule } from './menu-routing.module';
 import { TableModule } from 'primeng/table';
 import { MenuComponent } from './menu.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SidebarModule } from 'primeng/sidebar';
@@ -22,6 +22,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
         MenuRoutingModule,
         TableModule,
         FormsModule,
+        ReactiveFormsModule,
         InputTextModule,
         DialogModule,
         SidebarModule,

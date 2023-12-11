@@ -5,6 +5,8 @@ import { Table } from 'primeng/table';
 import { forkJoin } from 'rxjs';
 import { MenuService } from 'src/app/services/menu.service';
 import _ from 'lodash';
+import { FileUploadService } from 'src/app/services/file-upload.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-menu',
@@ -15,25 +17,36 @@ import _ from 'lodash';
 export class MenuComponent implements OnInit {
     @ViewChild('op') op: any;
     listDishes: any[] = [];
-
-    searchText: string = '';
+    status = ['PENDING'];
     displaySidebar: boolean = false;
-    selectedDish: any;
-    displayDialog: boolean = false;
-    newDish: any = {};
-    dt: any; // Thêm thuộc tính dt
-    editingDish: any;
     dish;
     category;
     newCate = '';
+    avatarFile: FileList;
+    logoUrl: string;
+    isLoading = false;
+    addDish: FormGroup;
     constructor(
         private dialogService: DialogService,
         private menuService: MenuService,
-        private message: MessageService
+        private message: MessageService,
+        private fileuploadService: FileUploadService,
+        private builder: FormBuilder
     ) {}
 
     ngOnInit(): void {
         this.getData();
+        this.addDish = this.builder.group({
+            foodId: this.builder.control(''),
+            image: this.builder.control(
+                'https://firebasestorage.googleapis.com/v0/b/advance-totem-350103.appspot.com/o/Avatar%2Fimage-holder-icon.png?alt=media&token=2bc0bac5-ea17-4dd9-8c9e-4813316da679'
+            ),
+            recipe: this.builder.control(''),
+            name: this.builder.control('', Validators.required),
+            price: this.builder.control('', Validators.required),
+            categoryId: this.builder.control('', Validators.required),
+            status: this.builder.control('PENDING', Validators.required),
+        });
     }
 
     getData() {
@@ -66,7 +79,11 @@ export class MenuComponent implements OnInit {
     }
 
     viewDetails(row: any): void {
-        this.dish = _.cloneDeep(row);
+        if (row) {
+            this.dish = _.cloneDeep(row);
+            this.addDish.patchValue(this.dish);
+        }
+
         this.displaySidebar = true;
     }
 
@@ -84,24 +101,16 @@ export class MenuComponent implements OnInit {
             'contains'
         );
     }
-    deleteDish(row: any) {
-        // Hiển thị hộp thoại xác nhận xóa
-        if (confirm(`Are you sure you want to delete ${row.dishName}?`)) {
-            // Thực hiện logic xóa món ăn khỏi danh sách
-            const index = this.listDishes.indexOf(row);
-            if (index !== -1) {
-                this.listDishes.splice(index, 1);
-            }
-        }
-    }
-    cancelDish() {
-        this.displayDialog = false; // Đóng form
-    }
 
     saveEditedDish() {
+        this.isLoading = true;
+
+        this.addDish.get('image').setValue;
         if (this.dish.foodId)
             this.menuService.updateFood(this.dish).subscribe({
                 next: (res) => {
+                    this.isLoading = false;
+
                     this.message.add({
                         key: 'toast',
                         severity: 'success',
@@ -114,6 +123,8 @@ export class MenuComponent implements OnInit {
         else
             this.menuService.createFood(this.dish).subscribe({
                 next: (res) => {
+                    this.isLoading = false;
+
                     this.message.add({
                         key: 'toast',
                         severity: 'success',
@@ -125,25 +136,50 @@ export class MenuComponent implements OnInit {
             });
     }
 
-    cancelEdit() {
-        // Hủy bỏ sự chỉnh sửa và đặt lại giá trị của `editingDish` về null.
-        this.editingDish = null;
-    }
-
     getCategoryName(id) {
         const cate = this.category.find((cate) => cate.categoryId === id);
         return cate ? cate.categoryName : '';
     }
 
     addNewCate() {
+        this.isLoading = true;
+
         this.menuService
             .createCategory({ categoryName: this.newCate })
             .subscribe({
                 next: (res) => {
+                    this.isLoading = false;
+
                     this.getFoodDetail(this.dish.foodId);
                     this.getCategory();
                     this.op.hide();
                 },
             });
+    }
+    async selectedAvatar(event) {
+        this.isLoading = true;
+        this.avatarFile = event.target.files;
+        const imgInput = <HTMLImageElement>document.getElementById('imgInput');
+        await this.fileuploadService.pushFileToStorage(
+            this.avatarFile[0],
+            'Foods'
+        );
+        this.isLoading = false;
+
+        this.dish.image = this.fileuploadService.getdownloadURL();
+        imgInput.src = URL.createObjectURL(this.avatarFile[0]);
+    }
+
+    deleteFood(food) {
+        this.menuService.deleteFood(food.foodId).subscribe({
+            next: () => {
+                this.message.add({
+                    key: 'toast',
+                    severity: 'success',
+                    detail: 'Deleted',
+                });
+                this.getData();
+            },
+        });
     }
 }

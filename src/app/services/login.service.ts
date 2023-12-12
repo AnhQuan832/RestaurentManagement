@@ -23,7 +23,7 @@ export class LoginService {
                     if (data.statusCode === 200) {
                         return data.data;
                     } else {
-                        throw new Error(data.meta);
+                        return false;
                     }
                 }),
                 catchError((err) => {

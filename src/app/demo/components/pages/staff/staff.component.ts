@@ -5,8 +5,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Table } from 'primeng/table';
 import { forkJoin } from 'rxjs';
 import { FileUploadService } from 'src/app/services/file-upload.service';
-import { MenuService } from 'src/app/services/menu.service';
 import _ from 'lodash';
+import { StaffService } from 'src/app/services/staff.service';
 
 @Component({
     selector: 'app-staff',
@@ -14,75 +14,78 @@ import _ from 'lodash';
     styleUrls: ['./staff.component.scss'],
 })
 export class StaffComponent {
-    listDishes: any[] = [];
+    listAccount: any[] = [];
     status = ['PENDING'];
+    role = ['Staff', 'Admin'];
+    gender = [
+        {
+            id: true,
+            name: 'Male',
+        },
+        {
+            id: false,
+            name: 'Female',
+        },
+    ];
     displaySidebar: boolean = false;
-    dish;
+    account;
     category;
     newCate = '';
     avatarFile: FileList;
     logoUrl: string;
     isLoading = false;
-    addDish: FormGroup;
+    addAccount: FormGroup;
     constructor(
         private dialogService: DialogService,
-        private menuService: MenuService,
         private message: MessageService,
         private fileuploadService: FileUploadService,
-        private builder: FormBuilder
+        private builder: FormBuilder,
+        private accountService: StaffService
     ) {}
 
     ngOnInit(): void {
         this.getData();
-        this.addDish = this.builder.group({
-            foodId: this.builder.control(''),
-            image: this.builder.control(
+        this.addAccount = this.builder.group({
+            accountId: this.builder.control(''),
+            avatar: this.builder.control(
                 'https://firebasestorage.googleapis.com/v0/b/advance-totem-350103.appspot.com/o/Avatar%2Fimage-holder-icon.png?alt=media&token=2bc0bac5-ea17-4dd9-8c9e-4813316da679'
             ),
-            recipe: this.builder.control(''),
             name: this.builder.control('', Validators.required),
-            price: this.builder.control('', Validators.required),
-            categoryId: this.builder.control('', Validators.required),
-            status: this.builder.control('PENDING', Validators.required),
+            email: this.builder.control('', Validators.required),
+            password: this.builder.control('', Validators.required),
+            role: this.builder.control('Staff', Validators.required),
+            dateOfBirth: this.builder.control(null, Validators.required),
+            gender: this.builder.control('', Validators.required),
+            phoneNumber: this.builder.control('', Validators.required),
+            createdAt: this.builder.control(''),
+            updatedAt: this.builder.control(''),
+            permissionsIds: this.builder.control([1]),
         });
     }
 
     getData() {
-        forkJoin([
-            this.menuService.getMenu(),
-            this.menuService.getListCategory(),
-        ]).subscribe({
+        this.accountService.getListStaff().subscribe({
             next: (res) => {
-                this.listDishes = res[0];
-                this.category = res[1];
+                this.listAccount = res;
             },
         });
     }
 
-    getCategory() {
-        this.menuService.getListCategory().subscribe({
+    getDetail(id) {
+        this.accountService.getDetail(id).subscribe({
             next: (res) => {
-                this.listDishes = res[0];
-                this.category = res[1];
-            },
-        });
-    }
-
-    getFoodDetail(id) {
-        this.menuService.getFoodDetail(id).subscribe({
-            next: (res) => {
-                this.dish = res;
+                this.account = res;
             },
         });
     }
 
     viewDetails(row: any): void {
         if (row) {
-            this.dish = _.cloneDeep(row);
-            this.addDish.patchValue(this.dish);
+            this.account = _.cloneDeep(row);
+            this.addAccount.patchValue(this.account);
         }
-
         this.displaySidebar = true;
+        this.addAccount.get('email').disable();
     }
 
     hideSidebar(): void {
@@ -100,15 +103,14 @@ export class StaffComponent {
         );
     }
 
-    saveEditedDish() {
+    saveEditedAccount() {
         this.isLoading = true;
-
-        this.addDish.get('image').setValue;
-        if (this.dish.foodId)
-            this.menuService.updateFood(this.dish).subscribe({
+        this.addAccount.get('avatar').setValue(this.logoUrl);
+        if (this.account.accountId) {
+            const data = this.addAccount.getRawValue();
+            this.accountService.updateInfo(data).subscribe({
                 next: (res) => {
                     this.isLoading = false;
-
                     this.message.add({
                         key: 'toast',
                         severity: 'success',
@@ -117,26 +119,39 @@ export class StaffComponent {
                     this.displaySidebar = false;
                     this.getData();
                 },
-            });
-        else
-            this.menuService.createFood(this.dish).subscribe({
-                next: (res) => {
+                error: (msg) => {
                     this.isLoading = false;
-
                     this.message.add({
                         key: 'toast',
-                        severity: 'success',
-                        detail: 'Updated',
+                        severity: 'error',
+                        detail: msg,
                     });
-                    this.displaySidebar = false;
-                    this.getData();
                 },
             });
-    }
-
-    getCategoryName(id) {
-        const cate = this.category.find((cate) => cate.categoryId === id);
-        return cate ? cate.categoryName : '';
+        } else
+            this.accountService
+                .addNewStaff(this.addAccount.getRawValue())
+                .subscribe({
+                    next: (res) => {
+                        this.isLoading = false;
+                        this.message.add({
+                            key: 'toast',
+                            severity: 'success',
+                            detail: 'Success',
+                        });
+                        this.displaySidebar = false;
+                        this.getData();
+                    },
+                    error: (msg) => {
+                        this.isLoading = false;
+                        this.isLoading = false;
+                        this.message.add({
+                            key: 'toast',
+                            severity: 'error',
+                            detail: msg,
+                        });
+                    },
+                });
     }
 
     async selectedAvatar(event) {
@@ -145,16 +160,16 @@ export class StaffComponent {
         const imgInput = <HTMLImageElement>document.getElementById('imgInput');
         await this.fileuploadService.pushFileToStorage(
             this.avatarFile[0],
-            'Foods'
+            'Avatars'
         );
         this.isLoading = false;
 
-        this.dish.image = this.fileuploadService.getdownloadURL();
+        this.account.image = this.fileuploadService.getdownloadURL();
         imgInput.src = URL.createObjectURL(this.avatarFile[0]);
     }
 
-    deleteFood(food) {
-        this.menuService.deleteFood(food.foodId).subscribe({
+    lockAccount(acc) {
+        this.accountService.deleteAccount(acc.email).subscribe({
             next: () => {
                 this.message.add({
                     key: 'toast',

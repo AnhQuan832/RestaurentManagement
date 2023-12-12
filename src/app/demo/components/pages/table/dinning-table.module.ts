@@ -1,27 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { StaffRoutingModule } from './staff-routing.module';
+import { TableRoutingModule } from './table-routing.module';
+import { TableComponent } from './table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { DialogService } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SidebarModule } from 'primeng/sidebar';
-import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import { StaffComponent } from './staff.component';
-import { MessageService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
-import { CalendarModule } from 'primeng/calendar';
+import { TableModule } from 'primeng/table';
+
 @NgModule({
-    declarations: [StaffComponent],
+    declarations: [TableComponent],
     imports: [
         CommonModule,
-        StaffRoutingModule,
+        TableRoutingModule,
         TableModule,
         FormsModule,
         ReactiveFormsModule,
@@ -34,8 +35,7 @@ import { CalendarModule } from 'primeng/calendar';
         ToastModule,
         InputNumberModule,
         OverlayPanelModule,
-        CalendarModule,
     ],
     providers: [MessageService, DialogService],
 })
-export class StaffModule {}
+export class DiningTableModule {}

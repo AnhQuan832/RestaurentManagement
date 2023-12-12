@@ -8,7 +8,7 @@
                         <button
                             pButton
                             pRipple
-                            label="Add new dish"
+                            label="Add new account"
                             icon="pi pi-plus"
                             (click)="viewDetails({})"
                             class="p-button-success"
@@ -19,7 +19,7 @@
 
             <p-table
                 #dt
-                [value]="listDishes"
+                [value]="listAccount"
                 [paginator]="true"
                 [rows]="10"
                 lazy="true"
@@ -44,22 +44,29 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th [width]="'30%'">Dish name</th>
-                        <th>Category</th>
-                        <th>Price</th>
+                        <th [width]="'20%'">Name</th>
+                        <th [width]="'20%'">Email</th>
+                        <th>Role</th>
+                        <th>Date of Birth</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
                         <th>Status</th>
-                        <th class="text-end">Actions</th>
+                        <th></th>
+
                         <!-- <th>Approved</th> -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
                     <tr>
                         <td>{{ row.name }}</td>
-                        <td>{{ getCategoryName(row.categoryId) }}</td>
+                        <td>{{ row.email }}</td>
                         <td>
-                            {{ row.price | currency : "VND" }}
+                            {{ row.role }}
                         </td>
-                        <td>{{ row.status }}</td>
+                        <td>{{ row.dateOfBirth | date : "dd/MM/yyyy" }}</td>
+                        <td>{{ row.phoneNumber }}</td>
+                        <td>{{ row.gender ? "Male" : "Female" }}</td>
+                        <td>{{ row.isBlock ? "Blocked" : "Active" }}</td>
                         <td class="text-end">
                             <button
                                 class="me-4"
@@ -69,10 +76,15 @@
                                 (click)="viewDetails(row)"
                             ></button>
                             <button
+                                [disabled]="row.isBlock"
                                 pButton
                                 type="button"
-                                icon="pi pi-trash"
-                                (click)="deleteFood(row)"
+                                [icon]="
+                                    row.isBlock
+                                        ? 'pi pi-lock-open'
+                                        : 'pi pi-lock'
+                                "
+                                (click)="lockAccount(row)"
                             ></button>
                         </td>
                     </tr>
@@ -89,15 +101,15 @@
 >
     <ng-template pTemplate="header">
         <p-button
-            [label]="dish.foodId ? 'Save' : 'Create'"
-            [disabled]="addDish.invalid"
-            (click)="saveEditedDish()"
+            [label]="account.accountId ? 'Save' : 'Create'"
+            [disabled]="addAccount.invalid"
+            (click)="saveEditedAccount()"
         ></p-button>
     </ng-template>
     <div
         *ngIf="displaySidebar"
         class="position-relative h-75"
-        [formGroup]="addDish"
+        [formGroup]="addAccount"
     >
         <div
             *ngIf="isLoading"
@@ -121,7 +133,7 @@
                     />
                     <img
                         [src]="
-                            dish.image ||
+                            account.avatar ||
                             'https://firebasestorage.googleapis.com/v0/b/advance-totem-350103.appspot.com/o/Avatar%2Fimage-holder-icon.png?alt=media&token=2bc0bac5-ea17-4dd9-8c9e-4813316da679'
                         "
                         alt=""
@@ -133,54 +145,48 @@
             </span>
         </div>
         <div class="row-type">
-            <label for="dishName">Dish Name:</label>
-            <input
-                pInputText
-                type="text"
-                formControlName="name"
-                id="dishName"
-            />
+            <label for="name">Name:</label>
+            <input pInputText type="text" formControlName="name" id="name" />
+        </div>
+
+        <div class="row-type">
+            <label for="email">Email:</label>
+            <input pInputText type="email" formControlName="email" id="email" />
         </div>
         <div class="row-type">
-            <label for="category">Category:</label>
+            <label for="gender">Gender:</label>
             <p-dropdown
-                [options]="category"
-                optionLabel="categoryName"
-                optionValue="categoryId"
-                formControlName="categoryId"
-                id="category"
+                [options]="gender"
+                optionLabel="name"
+                optionValue="id"
+                formControlName="gender"
+                id="gender"
             >
-                <ng-template pTemplate="footer">
-                    <div
-                        class="text-primary pb-2 d-flex justify-content-center"
-                        (click)="($event.stopPropagation); op.toggle($event)"
-                    >
-                        <span><i class="pi pi-plus"></i> Add More</span>
-                    </div>
-                </ng-template>
             </p-dropdown>
         </div>
         <div class="row-type">
-            <label for="price">Price:</label>
-            <p-inputNumber
-                mode="currency"
-                currency="VND"
-                type="number"
-                formControlName="price"
-                id="price"
-                [min]="0"
-                [max]="9999999"
-            >
-            </p-inputNumber>
-        </div>
-        <div class="row-type">
-            <label for="status">Status:</label>
+            <label for="phone">Phone:</label>
             <input
                 pInputText
                 type="text"
-                formControlName="status"
-                id="status"
+                formControlName="phoneNumber"
+                id="phone"
             />
+        </div>
+        <div class="row-type">
+            <label for="dob">Date of Birth:</label>
+            <p-calendar
+                [showIcon]="true"
+                inputId="icon"
+                id="dob"
+                formControlName="dateOfBirth"
+            ></p-calendar>
+        </div>
+        <div class="row-type">
+            <label for="status">Role:</label>
+
+            <p-dropdown [options]="role" formControlName="role" id="role">
+            </p-dropdown>
         </div>
     </div>
 </p-sidebar>

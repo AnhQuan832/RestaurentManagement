@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
             this.loginService.login(this.email, this.password).subscribe({
                 next: (res) => {
                     if (res) {
+                        sessionStorage.setItem('user', JSON.stringify(res));
                         sessionStorage.setItem(
                             'jwtToken',
                             JSON.stringify(res.accessToken)

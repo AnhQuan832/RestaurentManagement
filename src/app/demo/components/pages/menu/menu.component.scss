@@ -70,7 +70,7 @@ button .pi:hover {
         margin-left: 0.25em; /* Đặt khoảng cách giữa các nút trong footer */
     }
     ::ng-deep .p-sidebar-right {
-        width: 500px;
+        width: 550px;
     }
 }
 
@@ -126,7 +126,8 @@ p-sidebar {
 
 :host::ng-deep {
     .p-dropdown,
-    .p-inputnumber-input {
+    .p-inputnumber-input,
+    .p-calendar {
         height: 32px !important;
         width: 250px !important;
     }

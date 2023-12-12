@@ -4,20 +4,23 @@ import { LayoutService } from './service/app.layout.service';
 
 @Component({
     selector: 'app-menu',
-    templateUrl: './app.menu.component.html'
+    templateUrl: './app.menu.component.html',
 })
 export class AppMenuComponent implements OnInit {
-
     model: any[] = [];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(public layoutService: LayoutService) {}
 
     ngOnInit() {
         this.model = [
             {
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
-                ]
+                    {
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-home',
+                        routerLink: ['/'],
+                    },
+                ],
             },
             {
                 items: [
@@ -42,35 +45,34 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Order',
                         icon: 'pi pi-fw pi-shopping-cart',
-                        routerLink: ['/pages/order']
+                        routerLink: ['/pages/order'],
                     },
                     {
                         label: 'Menu',
                         icon: 'pi pi-fw pi-book',
-                        routerLink: ['/pages/menu']
+                        routerLink: ['/pages/menu'],
                     },
                     {
                         label: 'Table',
                         icon: 'pi pi-fw pi-table',
-                        routerLink: ['/pages/table']
+                        routerLink: ['/pages/table'],
                     },
                     {
                         label: 'Staff',
                         icon: 'pi pi-fw pi-users',
-                        routerLink: ['/pages/staff']
+                        routerLink: ['/pages/staff'],
                     },
                     {
                         label: 'Statistic',
                         icon: 'pi pi-fw pi-chart-line',
-                        routerLink: ['/pages/statistic']
+                        routerLink: ['/pages/statistic'],
                     },
                     {
-                        label: 'Login',
+                        label: 'Log out',
                         icon: 'pi pi-fw pi-sign-in',
-                        routerLink: ['/auth/login']
+                        routerLink: ['/auth/login'],
                     },
-
-                ]
+                ],
             },
         ];
     }

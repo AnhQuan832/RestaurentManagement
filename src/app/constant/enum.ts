@@ -10,14 +10,17 @@ export const API = {
         CREATE_CATEGORY: API_URL + 'categories/create',
     },
     TABLE: {
-        GET_TABLE: API_URL + 'dining-table',
-        CREATE_TABLE: API_URL + 'dining-table',
+        GET_TABLE: API_URL + 'dining-tables',
+        CREATE_TABLE: API_URL + 'dining-tables/create',
     },
     FOOD: {
         GET_FOOD: API_URL + 'foods',
         GET_FOOD_ADMIN: API_URL + 'foods/admin',
         GET_FOOD_CUSTOMER: API_URL + 'foods/customer',
         GET_FOOD_GROUP: API_URL + 'foods/group-by-category',
+    },
+    ACCOUNT: {
+        GET: API_URL + 'accounts',
     },
 };
 

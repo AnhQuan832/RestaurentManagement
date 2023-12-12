@@ -1,3 +1,142 @@
+<!-- Thanh tìm kiếm tùy chỉnh -->
 <div class="grid">
-    <div class="col-12"><div class="card"></div></div>
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button
+                            pButton
+                            pRipple
+                            label="Add new table"
+                            icon="pi pi-plus"
+                            (click)="viewDetails({})"
+                            class="p-button-success"
+                        ></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table
+                #dt
+                [value]="listTable"
+                [paginator]="true"
+                [rows]="10"
+                lazy="true"
+                [globalFilterFields]="['name', 'price']"
+            >
+                <ng-template pTemplate="caption">
+                    <div
+                        class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                    >
+                        <h5 class="m-0">List Table</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input
+                                pInputText
+                                type="text"
+                                (input)="onGlobalFilter(dt, $event)"
+                                placeholder="Search..."
+                                class="w-full sm:w-auto"
+                            />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Name</th>
+                        <th>Capacity</th>
+                        <th>Status</th>
+                        <th></th>
+
+                        <!-- <th>Approved</th> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr>
+                        <td>{{ row.tableNumber }}</td>
+                        <td>
+                            {{ row.capacity }}
+                        </td>
+
+                        <td>{{ row.status }}</td>
+                        <td class="text-end">
+                            <button
+                                class="me-4"
+                                pButton
+                                type="button"
+                                icon="pi pi-pencil"
+                                (click)="viewDetails(row)"
+                            ></button>
+                            <button
+                                [disabled]="row.isBlock"
+                                pButton
+                                type="button"
+                                [icon]="
+                                    row.isBlock
+                                        ? 'pi pi-lock-open'
+                                        : 'pi pi-lock'
+                                "
+                                (click)="lockTable(row)"
+                            ></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
 </div>
+
+<p-sidebar
+    [(visible)]="displaySidebar"
+    [position]="'right'"
+    [blockScroll]="true"
+>
+    <ng-template pTemplate="header">
+        <p-button
+            [label]="table.tableId ? 'Save' : 'Create'"
+            [disabled]="addTable.invalid"
+            (click)="saveEditedTable()"
+        ></p-button>
+    </ng-template>
+    <div
+        *ngIf="displaySidebar"
+        class="position-relative h-75"
+        [formGroup]="addTable"
+    >
+        <div
+            *ngIf="isLoading"
+            class="loading w-100 h-100 position-absolute d-flex d-flex justify-content-center align-items-center flex-column gap-2 bg-body rounded-3 z-3"
+        >
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p style="opacity: 0.7">Loading</p>
+        </div>
+        <div class="row-type">
+            <label for="tableNumber">Table number:</label>
+            <input
+                pInputText
+                type="text"
+                formControlName="tableNumber"
+                id="tableNumber"
+            />
+        </div>
+        <div class="row-type">
+            <label for="capacity">Capacity:</label>
+            <input
+                pInputText
+                type="text"
+                formControlName="capacity"
+                id="capacity"
+            />
+        </div>
+        <div class="row-type">
+            <label for="status">Status:</label>
+            <p-dropdown [options]="status" formControlName="status" id="status">
+            </p-dropdown>
+        </div>
+    </div>
+</p-sidebar>
+
+<p-toast key="toast"></p-toast>

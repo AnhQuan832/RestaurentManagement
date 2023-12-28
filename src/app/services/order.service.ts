@@ -50,4 +50,21 @@ export class OrderService {
             { headers: this.storageSrv.getHttpHeader() }
         );
     }
+
+    updateOrderFood(foodOrderId, status) {
+        return this.http.put(API.ORDER.UPDATE + `/${foodOrderId}`, null, {
+            params: { status },
+            headers: this.storageSrv.getHttpHeader(),
+        });
+    }
+
+    createBill(servingId) {
+        return this.http.post(
+            API.BILL.CREATE,
+            { servingId },
+            {
+                headers: this.storageSrv.getHttpHeader(),
+            }
+        );
+    }
 }

@@ -64,3 +64,21 @@ export const ATTRIBUTED = {
         name: 'Color',
     },
 };
+
+export const TABLE_STATUS = {
+    AVALABLE: 'AVAILABLE',
+    OCCUPIED: 'OCCUPIED',
+    PREPARING: 'PREPARING',
+};
+
+export const FOOD_ORDER_STATUS = {
+    PENDING: 'PENDING',
+    PROCESSING: 'PROCESSING',
+    SERVED: 'SERVED',
+};
+
+export const FOOD_STATUS = {
+    AVALABLE: 'AVAILABLE',
+    PENDING: 'PENDING',
+    HIDDEN: 'HIDDEN',
+};

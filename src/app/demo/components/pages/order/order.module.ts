@@ -25,6 +25,8 @@ import { DataViewModule } from 'primeng/dataview';
 import { TabViewModule } from 'primeng/tabview';
 import { PanelModule } from 'primeng/panel';
 import { TagModule } from 'primeng/tag';
+import { OverlayModule } from 'primeng/overlay';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
     declarations: [OrderComponent],
@@ -56,6 +58,8 @@ import { TagModule } from 'primeng/tag';
         TabViewModule,
         PanelModule,
         TagModule,
+        OverlayModule,
+        OverlayPanelModule,
     ],
     providers: [MessageService, DialogService],
 })

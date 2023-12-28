@@ -17,7 +17,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class MenuComponent implements OnInit {
     @ViewChild('op') op: any;
     listDishes: any[] = [];
-    status = ['PENDING'];
+    status = ['PENDING', 'HIDDEN', 'AVALABLE'];
     displaySidebar: boolean = false;
     dish;
     category;
@@ -78,12 +78,14 @@ export class MenuComponent implements OnInit {
         });
     }
 
-    viewDetails(row: any): void {
+    viewDetails(row?): void {
         if (row) {
             this.dish = _.cloneDeep(row);
             this.addDish.patchValue(this.dish);
+        } else {
+            this.dish = null;
+            this.addDish.reset();
         }
-
         this.displaySidebar = true;
     }
 
@@ -180,6 +182,27 @@ export class MenuComponent implements OnInit {
                 });
                 this.getData();
             },
+            error: () => {
+                this.message.add({
+                    key: 'toast',
+                    severity: 'error',
+                    detail: 'Can not delete',
+                });
+            },
         });
+    }
+
+    getSeverity(status) {
+        switch (status) {
+            case 'PREPARING':
+            case 'PROCESSING':
+                return 'info';
+            case 'OCCUPIED':
+                return 'danger';
+            case 'AVAILABLE':
+                return 'success';
+            default:
+                return 'warning';
+        }
     }
 }

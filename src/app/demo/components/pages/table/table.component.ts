@@ -145,7 +145,7 @@ export class TableComponent {
     }
 
     lockTable(acc) {
-        this.tableService.deleteTable(acc.email).subscribe({
+        this.tableService.deleteTable(acc.tableId).subscribe({
             next: () => {
                 this.message.add({
                     key: 'toast',
@@ -155,5 +155,20 @@ export class TableComponent {
                 this.getData();
             },
         });
+    }
+
+    getSeverity(status) {
+        switch (status) {
+            case 'PREPARING':
+            case 'PROCESSING':
+                return 'info';
+            case 'OCCUPIED':
+                return 'danger';
+            case 'AVAILABLE':
+            case 'SERVED':
+                return 'success';
+            default:
+                return 'warning';
+        }
     }
 }

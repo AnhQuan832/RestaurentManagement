@@ -16,7 +16,33 @@ import { StaffService } from 'src/app/services/staff.service';
 export class StaffComponent {
     listAccount: any[] = [];
     status = ['PENDING'];
-    role = ['Staff', 'Admin'];
+    role = [
+        {
+            permissionId: 1,
+            permissionName: 'Order',
+            permits: [],
+        },
+        {
+            permissionId: 2,
+            permissionName: 'Menu',
+            permits: [],
+        },
+        {
+            permissionId: 3,
+            permissionName: 'Table',
+            permits: [],
+        },
+        {
+            permissionId: 4,
+            permissionName: 'Staff',
+            permits: [],
+        },
+        {
+            permissionId: 5,
+            permissionName: 'Dashboard',
+            permits: [],
+        },
+    ];
     gender = [
         {
             id: true,
@@ -48,18 +74,17 @@ export class StaffComponent {
         this.addAccount = this.builder.group({
             accountId: this.builder.control(''),
             avatar: this.builder.control(
-                'https://firebasestorage.googleapis.com/v0/b/advance-totem-350103.appspot.com/o/Avatar%2Fimage-holder-icon.png?alt=media&token=2bc0bac5-ea17-4dd9-8c9e-4813316da679'
+                'https://res.cloudinary.com/dwskvqnkc/image/upload/v1698909675/menu_minder_store/img_default_elml1l.jpg'
             ),
             name: this.builder.control('', Validators.required),
             email: this.builder.control('', Validators.required),
             password: this.builder.control('', Validators.required),
-            role: this.builder.control('Staff', Validators.required),
-            dateOfBirth: this.builder.control(null, Validators.required),
-            gender: this.builder.control('', Validators.required),
+            // dateOfBirth: this.builder.control(null, Validators.required),
+            gender: this.builder.control(true, Validators.required),
             phoneNumber: this.builder.control('', Validators.required),
             createdAt: this.builder.control(''),
             updatedAt: this.builder.control(''),
-            permissionsIds: this.builder.control([1]),
+            permissionIds: this.builder.control(null),
         });
     }
 
@@ -85,7 +110,7 @@ export class StaffComponent {
             this.addAccount.patchValue(this.account);
         }
         this.displaySidebar = true;
-        this.addAccount.get('email').disable();
+        // this.addAccount.get('email').disable();
     }
 
     hideSidebar(): void {

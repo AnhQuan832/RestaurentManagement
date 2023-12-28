@@ -14,6 +14,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Toast, ToastModule } from 'primeng/toast';
 import { InputNumber, InputNumberModule } from 'primeng/inputnumber';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
     declarations: [MenuComponent],
@@ -32,6 +33,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
         ToastModule,
         InputNumberModule,
         OverlayPanelModule,
+        TagModule,
     ],
 })
 export class MenuModule {}

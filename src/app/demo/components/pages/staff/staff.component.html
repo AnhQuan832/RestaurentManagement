@@ -22,14 +22,15 @@
                 [value]="listAccount"
                 [paginator]="true"
                 [rows]="10"
-                lazy="true"
-                [globalFilterFields]="['name', 'price']"
+                [globalFilterFields]="['name', 'price', 'email', 'phoneNumber']"
+                [rowHover]="true"
+                dataKey="serving.servingId "
             >
                 <ng-template pTemplate="caption">
                     <div
                         class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                     >
-                        <h5 class="m-0">List Dish</h5>
+                        <h5 class="m-0">List Staff</h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input
@@ -47,7 +48,7 @@
                         <th [width]="'20%'">Name</th>
                         <th [width]="'20%'">Email</th>
                         <th>Role</th>
-                        <th>Date of Birth</th>
+                        <!-- <th>Date of Birth</th> -->
                         <th>Phone</th>
                         <th>Gender</th>
                         <th>Status</th>
@@ -63,10 +64,15 @@
                         <td>
                             {{ row.role }}
                         </td>
-                        <td>{{ row.dateOfBirth | date : "dd/MM/yyyy" }}</td>
+                        <!-- <td>{{ row.dateOfBirth | date : "dd/MM/yyyy" }}</td> -->
                         <td>{{ row.phoneNumber }}</td>
                         <td>{{ row.gender ? "Male" : "Female" }}</td>
-                        <td>{{ row.isBlock ? "Blocked" : "Active" }}</td>
+                        <td>
+                            <p-tag
+                                [value]="row.isBlock ? 'Blocked' : 'Active'"
+                                [severity]="row.isBlock ? 'error' : 'success'"
+                            ></p-tag>
+                        </td>
                         <td class="text-end">
                             <button
                                 class="me-4"
@@ -79,6 +85,7 @@
                                 [disabled]="row.isBlock"
                                 pButton
                                 type="button"
+                                class="p-button-outlined p-button-danger"
                                 [icon]="
                                     row.isBlock
                                         ? 'pi pi-lock-open'
@@ -134,7 +141,7 @@
                     <img
                         [src]="
                             account.avatar ||
-                            'https://firebasestorage.googleapis.com/v0/b/advance-totem-350103.appspot.com/o/Avatar%2Fimage-holder-icon.png?alt=media&token=2bc0bac5-ea17-4dd9-8c9e-4813316da679'
+                            'https://res.cloudinary.com/dwskvqnkc/image/upload/v1698909675/menu_minder_store/img_default_elml1l.jpg'
                         "
                         alt=""
                         id="imgInput"
@@ -152,6 +159,15 @@
         <div class="row-type">
             <label for="email">Email:</label>
             <input pInputText type="email" formControlName="email" id="email" />
+        </div>
+
+        <div class="row-type">
+            <label for="password">Password:</label>
+            <p-password
+                formControlName="password"
+                id="password"
+                [toggleMask]="true"
+            ></p-password>
         </div>
         <div class="row-type">
             <label for="gender">Gender:</label>
@@ -173,7 +189,7 @@
                 id="phone"
             />
         </div>
-        <div class="row-type">
+        <!-- <div class="row-type">
             <label for="dob">Date of Birth:</label>
             <p-calendar
                 [showIcon]="true"
@@ -181,12 +197,19 @@
                 id="dob"
                 formControlName="dateOfBirth"
             ></p-calendar>
-        </div>
+        </div> -->
         <div class="row-type">
-            <label for="status">Role:</label>
+            <label for="role">Role:</label>
 
-            <p-dropdown [options]="role" formControlName="role" id="role">
-            </p-dropdown>
+            <p-multiSelect
+                styleClass="flex-center"
+                [options]="role"
+                optionLabel="permissionName"
+                optionValue="permissionId"
+                formControlName="permissionIds"
+                id="role"
+            >
+            </p-multiSelect>
         </div>
     </div>
 </p-sidebar>

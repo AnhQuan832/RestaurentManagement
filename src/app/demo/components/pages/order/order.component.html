@@ -34,7 +34,10 @@
                                 : 'pi pi-angle-double-left'
                         }}"
                         iconPos="right"
-                        (click)="showServing = !showServing"
+                        (click)="
+                            showServing = !showServing;
+                            showServing ? getListServing() : getListTable()
+                        "
                     ></p-button>
                 </ng-template>
             </p-toolbar>
@@ -45,10 +48,13 @@
                 [value]="tables"
                 responsiveLayout="scroll"
                 [rows]="10"
-                [globalFilterFields]="['name', 'status', 'capacity']"
+                [globalFilterFields]="[
+                    'capacity',
+                    'status',
+                    'tableId',
+                    'tableNumber'
+                ]"
                 [paginator]="true"
-                [rowsPerPageOptions]="[10, 20, 30]"
-                [showCurrentPageReport]="true"
                 [(selection)]="selectedTables"
                 selectionMode="multiple"
                 [rowHover]="true"
@@ -73,9 +79,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
+                        <th style="width: 3rem"></th>
                         <th>ID</th>
                         <th>Table</th>
                         <th>Capacity</th>
@@ -121,16 +125,30 @@
                 <ng-template pTemplate="body" let-table>
                     <tr>
                         <td>
-                            <p-tableCheckbox [value]="table"></p-tableCheckbox>
+                            <p-tableCheckbox
+                                [value]="table"
+                                [disabled]="table.status !== 'AVAILABLE'"
+                            ></p-tableCheckbox>
                         </td>
                         <td>{{ table.tableId }}</td>
                         <td>{{ table.tableNumber }}</td>
                         <td>{{ table.capacity }}</td>
+
                         <td>
-                            <p-tag
-                                [value]="table.status"
-                                [severity]="getSeverity(table.status)"
-                            ></p-tag>
+                            <p-dropdown
+                                [options]="tableStatus"
+                                [(ngModel)]="table.status"
+                                [disabled]="table.status === 'OCCUPIED'"
+                                appendTo="body"
+                                (onChange)="updateTableStatus(table)"
+                            >
+                                <ng-template pTemplate="selectedItem">
+                                    <p-tag
+                                        [value]="table.status"
+                                        [severity]="getSeverity(table.status)"
+                                    ></p-tag>
+                                </ng-template>
+                            </p-dropdown>
                         </td>
 
                         <!-- <td>
@@ -163,10 +181,12 @@
                 [value]="listServing"
                 responsiveLayout="scroll"
                 [rows]="10"
-                [globalFilterFields]="['name', 'status', 'capacity']"
+                [globalFilterFields]="[
+                    'serving.servingId',
+                    'serving.table',
+                    'capacity'
+                ]"
                 [paginator]="true"
-                [rowsPerPageOptions]="[10, 20, 30]"
-                [showCurrentPageReport]="true"
                 [(selection)]="selectedServing"
                 selectionMode="multiple"
                 [rowHover]="true"
@@ -239,7 +259,7 @@
     <div *ngIf="showServing && selectedServing" class="col-6">
         <div class="card px-6 py-6">
             <div class="title">
-                <h5>Serving No{{ selectedServing.serving.servingId }}</h5>
+                <h5>Serving No.{{ selectedServing.serving.servingId }}</h5>
             </div>
             <div class="dishes">
                 <p-dataView
@@ -302,12 +322,48 @@
                                             [style.width.px]="23"
                                             [style.height.px]="24"
                                             pTooltip="Add Dish"
-                                            (click)="orderFood(product)"
+                                            (click)="op.toggle($event)"
                                         ></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <p-overlayPanel #op>
+                            <div>
+                                <h6>Quantity</h6>
+                                <p-inputNumber
+                                    [(ngModel)]="qty"
+                                    [showButtons]="true"
+                                    buttonLayout="horizontal"
+                                    spinnerMode="horizontal"
+                                    decrementButtonClass="p-button-secondary"
+                                    incrementButtonClass="p-button-secondary"
+                                    incrementButtonIcon="pi pi-plus"
+                                    decrementButtonIcon="pi pi-minus"
+                                ></p-inputNumber>
+
+                                <h5>Note</h5>
+                                <textarea
+                                    rows="5"
+                                    cols="30"
+                                    class="w-100"
+                                    placeholder="Customer note"
+                                    pInputTextarea
+                                    [(ngModel)]="note"
+                                ></textarea>
+
+                                <button
+                                    pButton
+                                    pRipple
+                                    type="button"
+                                    icon="pi pi-plus"
+                                    label="Add"
+                                    class="p-button-secondary p-button-outlined mx-auto"
+                                    pTooltip="Add Dish"
+                                    (click)="orderFood(product, qty, note)"
+                                ></button>
+                            </div>
+                        </p-overlayPanel>
                     </ng-template>
                 </p-dataView>
             </div>
@@ -318,13 +374,13 @@
                     #dt
                     [value]="servingDetail"
                     responsiveLayout="scroll"
+                    [scrollable]="true"
+                    scrollHeight="300px"
                     [rows]="10"
                     [globalFilterFields]="['name', 'status', 'capacity']"
-                    [rowsPerPageOptions]="[10, 20, 30]"
-                    [showCurrentPageReport]="true"
                     selectionMode="multiple"
                     [rowHover]="true"
-                    dataKey="serving.servingId "
+                    dataKey="serving.servingId"
                 >
                     <!-- <ng-template pTemplate="caption">
                         <div
@@ -361,12 +417,39 @@
                                 {{ ser.price | currency : "VND" }}
                             </td>
                             <td>
-                                <p-tag
-                                    [value]="ser.status"
-                                    [severity]="getSeverity(ser.status)"
-                                ></p-tag>
+                                <p-dropdown
+                                    [options]="orderStatus"
+                                    appendTo="body"
+                                    [(ngModel)]="selectedStatus"
+                                    (onChange)="updateOrderStatus(ser)"
+                                >
+                                    <ng-template pTemplate="selectedItem">
+                                        <p-tag
+                                            [value]="ser.status"
+                                            [severity]="getSeverity(ser.status)"
+                                        ></p-tag>
+                                    </ng-template>
+                                </p-dropdown>
                             </td>
                         </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div
+                            class="d-flex align-items-center justify-content-end"
+                        >
+                            <p
+                                class="text-center pe-4 mb-0"
+                                style="width: fit-content"
+                            >
+                                Total: {{ totalPrice | currency : "VND" }}
+                            </p>
+                            <button
+                                pButton
+                                pRipple
+                                label="Checkout"
+                                (click)="checkOut()"
+                            ></button>
+                        </div>
                     </ng-template>
                 </p-table>
             </div>

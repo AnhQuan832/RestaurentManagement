@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { LoginService } from 'src/app/services/login.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
     selector: 'app-login',
@@ -27,10 +28,11 @@ export class LoginComponent implements OnInit {
     constructor(
         public layoutService: LayoutService,
         private loginService: LoginService,
-        private router: Router
+        private router: Router,
+        private storageService: StorageService
     ) {}
     ngOnInit(): void {
-        sessionStorage.clear();
+        localStorage.clear();
     }
 
     login() {
@@ -41,10 +43,10 @@ export class LoginComponent implements OnInit {
             this.loginService.login(this.email, this.password).subscribe({
                 next: (res) => {
                     if (res) {
-                        sessionStorage.setItem('user', JSON.stringify(res));
-                        sessionStorage.setItem(
+                        this.storageService.setItemLocal('user', res);
+                        this.storageService.setTimeResetTokenCookie(
                             'jwtToken',
-                            JSON.stringify(res.accessToken)
+                            res.accessToken
                         );
                         this.router.navigate(['']);
                     }

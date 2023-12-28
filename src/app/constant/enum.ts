@@ -21,6 +21,36 @@ export const API = {
     },
     ACCOUNT: {
         GET: API_URL + 'accounts',
+        GET_ALL: API_URL + 'accounts/all',
+        PERMITS: API_URL + 'accounts/permits',
+        BLOCK: API_URL + 'accounts/block',
+        DELETE: API_URL + 'accounts/delete',
+        CURRENT: API_URL + 'me/my-account',
+        UPDATE_CURRENT: API_URL + 'me/update',
+        UPDATE__CURRENT_PASSWORD: API_URL + 'me/update-password',
+    },
+    SERVING: {
+        GET_ALL: API_URL + 'serving/unpaid',
+        GET_DETAIL: API_URL + 'serving/detail',
+        CREATE: API_URL + 'serving/create',
+        ORDER_FOOD: API_URL + 'serving',
+    },
+    PERMISSION: {
+        GET_ALL: API_URL + 'permissions',
+    },
+    ORDER: {
+        GET_ALL: API_URL + 'food-order',
+        UPDATE: API_URL + 'food-order/update-status',
+    },
+    BILL: {
+        CREATE: API_URL + 'bills/create',
+    },
+    RESERVATION: {
+        GET: API_URL + 'reservations',
+        GET_ALL: API_URL + 'reservations/all',
+        CREATE: API_URL + 'reservations/create',
+        UPDATE: API_URL + 'reservations/update',
+        DELETE: API_URL + 'reservations/delete',
     },
 };
 

@@ -1,5 +1,10 @@
 <div class="grid">
-    <div [ngClass]="{ 'col-6': showServing, 'col-12': !showServing }">
+    <div
+        [ngClass]="{
+            'col-6': showServing,
+            'col-12': !showServing || !selectedServing
+        }"
+    >
         <div class="card px-6 py-6">
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
@@ -12,7 +17,7 @@
                             class="p-button-success"
                             (click)="createOrder()"
                             [disabled]="
-                                !selectedProducts || !selectedProducts.length
+                                !selectedTables || !selectedTables.length
                             "
                         ></button>
                     </div>
@@ -44,7 +49,7 @@
                 [paginator]="true"
                 [rowsPerPageOptions]="[10, 20, 30]"
                 [showCurrentPageReport]="true"
-                [(selection)]="selectedProducts"
+                [(selection)]="selectedTables"
                 selectionMode="multiple"
                 [rowHover]="true"
                 dataKey="tableId"
@@ -119,7 +124,7 @@
                             <p-tableCheckbox [value]="table"></p-tableCheckbox>
                         </td>
                         <td>{{ table.tableId }}</td>
-                        <td>{{ table.name }}</td>
+                        <td>{{ table.tableNumber }}</td>
                         <td>{{ table.capacity }}</td>
                         <td>
                             <p-tag
@@ -155,17 +160,17 @@
             <p-table
                 *ngIf="showServing"
                 #dt
-                [value]="tables"
+                [value]="listServing"
                 responsiveLayout="scroll"
                 [rows]="10"
                 [globalFilterFields]="['name', 'status', 'capacity']"
                 [paginator]="true"
                 [rowsPerPageOptions]="[10, 20, 30]"
                 [showCurrentPageReport]="true"
-                [(selection)]="selectedProducts"
+                [(selection)]="selectedServing"
                 selectionMode="multiple"
                 [rowHover]="true"
-                dataKey="tableId"
+                dataKey="serving.servingId "
             >
                 <ng-template pTemplate="caption">
                     <div
@@ -186,24 +191,24 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
                         <th>ID</th>
+                        <th>Time in</th>
                         <th>Table</th>
-                        <th>Capacity</th>
-                        <th>Status</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-table>
-                    <tr>
+                <ng-template pTemplate="body" let-ser>
+                    <tr (click)="onServingSelect(ser)" style="cursor: pointer">
+                        <td>{{ ser.serving.servingId }}</td>
                         <td>
-                            <p-tableCheckbox [value]="table"></p-tableCheckbox>
+                            {{ ser.serving.timeIn | date : "H:mm" }}
                         </td>
-                        <td>{{ table.tableId }}</td>
-                        <td>{{ table.name }}</td>
-                        <td>{{ table.capacity }}</td>
-                        <td>{{ table.status }}</td>
+                        <td>{{ ser.serving?.tables?.join(", ") }}</td>
+                        <!-- <td>
+                            <p-tag
+                                [value]="table.serving.status"
+                                [severity]="getSeverity(table.status)"
+                            ></p-tag>
+                        </td> -->
 
                         <!-- <td>
                             <div class="flex">
@@ -231,10 +236,10 @@
             </p-table>
         </div>
     </div>
-    <div *ngIf="showServing" class="col-6">
+    <div *ngIf="showServing && selectedServing" class="col-6">
         <div class="card px-6 py-6">
             <div class="title">
-                <h5>Serving No.1</h5>
+                <h5>Serving No{{ selectedServing.serving.servingId }}</h5>
             </div>
             <div class="dishes">
                 <p-dataView
@@ -297,7 +302,7 @@
                                             [style.width.px]="23"
                                             [style.height.px]="24"
                                             pTooltip="Add Dish"
-                                            (click)="onAddDish(product)"
+                                            (click)="orderFood(product)"
                                         ></button>
                                     </div>
                                 </div>
@@ -307,43 +312,65 @@
                 </p-dataView>
             </div>
 
-            <!-- <div class="table-detail">
-                <p-tabView orientation="left" (onChange)="onChangeTab($event)">
-                    <p-tabPanel header="Header I" class="line-height-3 m-0">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat. Duis aute irure dolor in
-                        reprehenderit in voluptate velit esse cillum dolore eu
-                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                        non proident, sunt in culpa qui officia deserunt mollit
-                        anim id est laborum.
-                    </p-tabPanel>
-                    <p-tabPanel header="Header II" class="line-height-3 m-0">
-                        Sed ut perspiciatis unde omnis iste natus error sit
-                        voluptatem accusantium doloremque laudantium, totam rem
-                        aperiam, eaque ipsa quae ab illo inventore veritatis et
-                        quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                        enim ipsam voluptatem quia voluptas sit aspernatur aut
-                        odit aut fugit, sed quia consequuntur magni dolores eos
-                        qui ratione voluptatem sequi nesciunt. Consectetur,
-                        adipisci velit, sed quia non numquam eius modi.
-                    </p-tabPanel>
-                    <p-tabPanel header="Header III" class="line-height-3 m-0">
-                        At vero eos et accusamus et iusto odio dignissimos
-                        ducimus qui blanditiis praesentium voluptatum deleniti
-                        atque corrupti quos dolores et quas molestias excepturi
-                        sint occaecati cupiditate non provident, similique sunt
-                        in culpa qui officia deserunt mollitia animi, id est
-                        laborum et dolorum fuga. Et harum quidem rerum facilis
-                        est et expedita distinctio. Nam libero tempore, cum
-                        soluta nobis est eligendi optio cumque nihil impedit quo
-                        minus.
-                    </p-tabPanel>
-                </p-tabView>
+            <div class="table-detail">
+                <h6>Order</h6>
+                <p-table
+                    #dt
+                    [value]="servingDetail"
+                    responsiveLayout="scroll"
+                    [rows]="10"
+                    [globalFilterFields]="['name', 'status', 'capacity']"
+                    [rowsPerPageOptions]="[10, 20, 30]"
+                    [showCurrentPageReport]="true"
+                    selectionMode="multiple"
+                    [rowHover]="true"
+                    dataKey="serving.servingId "
+                >
+                    <!-- <ng-template pTemplate="caption">
+                        <div
+                            class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                        >
+                            <h5 class="m-0">List Serving</h5>
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input
+                                    pInputText
+                                    type="text"
+                                    (input)="onGlobalFilter(dt, $event)"
+                                    placeholder="Search..."
+                                    class="w-full sm:w-auto"
+                                />
+                            </span>
+                        </div>
+                    </ng-template> -->
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-ser>
+                        <tr>
+                            <td>{{ ser.foodName }}</td>
+                            <td>
+                                {{ ser.quantity }}
+                            </td>
+                            <td>
+                                {{ ser.price | currency : "VND" }}
+                            </td>
+                            <td>
+                                <p-tag
+                                    [value]="ser.status"
+                                    [severity]="getSeverity(ser.status)"
+                                ></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
-            <div class="button-group">
+            <!-- <div class="button-group">
                 <button
                     pButton
                     pRipple

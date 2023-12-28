@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     constructor(private router: Router) {}
 
     ngOnInit() {
-        const token = sessionStorage.getItem('jwtToken');
+        const token = localStorage.getItem('user');
         if (!token) {
             this.router.navigate(['/auth/login']);
         }

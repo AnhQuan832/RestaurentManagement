@@ -8,6 +8,7 @@ import { DataView } from 'primeng/dataview';
 import { MenuService } from 'src/app/services/menu.service';
 import { OrderService } from 'src/app/services/order.service';
 import { forkJoin } from 'rxjs';
+import { TableService } from 'src/app/services/table.service';
 @Component({
     selector: 'app-order',
     templateUrl: './order.component.html',
@@ -24,134 +25,17 @@ export class OrderComponent implements OnInit {
         { label: 'Occupied', value: 'Occupied' },
         { label: 'Preparing', value: 'Preparing' },
     ];
-    tables: any[] = [
-        {
-            status: 'Available',
-            name: 'Table 1',
-            capacity: 4,
-            tableId: 1,
-        },
-        {
-            status: 'Occupied',
-            name: 'Table 2',
-            capacity: 2,
-            tableId: 2,
-        },
-        {
-            status: 'Preparing',
-            name: 'Table 3',
-            capacity: 6,
-            tableId: 3,
-        },
-        {
-            status: 'Available',
-            name: 'Table 4',
-            capacity: 4,
-            tableId: 4,
-        },
-        {
-            status: 'Occupied',
-            name: 'Table 5',
-            capacity: 2,
-            tableId: 5,
-        },
-        {
-            status: 'Preparing',
-            name: 'Table 6',
-            capacity: 6,
-            tableId: 6,
-        },
-        {
-            status: 'Available',
-            name: 'Table 7',
-            capacity: 4,
-            tableId: 7,
-        },
-        {
-            status: 'Occupied',
-            name: 'Table 8',
-            capacity: 2,
-            tableId: 8,
-        },
-        {
-            status: 'Preparing',
-            name: 'Table 9',
-            capacity: 6,
-            tableId: 9,
-        },
-        {
-            status: 'Available',
-            name: 'Table 10',
-            capacity: 4,
-            tableId: 10,
-        },
-        {
-            status: 'Occupied',
-            name: 'Table 11',
-            capacity: 2,
-            tableId: 11,
-        },
-        {
-            status: 'Preparing',
-            name: 'Table 12',
-            capacity: 6,
-            tableId: 12,
-        },
-        {
-            status: 'Available',
-            name: 'Table 13',
-            capacity: 4,
-            tableId: 13,
-        },
-        {
-            status: 'Occupied',
-            name: 'Table 14',
-            capacity: 2,
-            tableId: 14,
-        },
-        {
-            status: 'Preparing',
-            name: 'Table 15',
-            capacity: 6,
-            tableId: 15,
-        },
-        {
-            status: 'Available',
-            name: 'Table 16',
-            capacity: 4,
-            tableId: 16,
-        },
-        {
-            status: 'Occupied',
-            name: 'Table 17',
-            capacity: 2,
-            tableId: 17,
-        },
-        {
-            status: 'Preparing',
-            name: 'Table 18',
-            capacity: 6,
-            tableId: 18,
-        },
-        {
-            status: 'Available',
-            name: 'Table 19',
-            capacity: 4,
-            tableId: 19,
-        },
-        {
-            status: 'Occupied',
-            name: 'Table 20',
-            capacity: 2,
-            tableId: 20,
-        },
-    ];
+    tables;
 
+    listServing;
+    listFoodOrder = [];
     listFood;
     category;
+    selectedServing;
     product: any = {};
-
-    selectedProducts: any[] = [];
+    servingDetail;
+    totalPrice;
+    selectedTables: any[] = [];
 
     submitted: boolean = false;
 
@@ -165,7 +49,8 @@ export class OrderComponent implements OnInit {
         private storageSerive: StorageService,
         private messageService: MessageService,
         private menuService: MenuService,
-        private orderService: OrderService
+        private orderService: OrderService,
+        private tableService: TableService
     ) {}
 
     ngOnInit() {
@@ -176,10 +61,20 @@ export class OrderComponent implements OnInit {
         forkJoin([
             this.menuService.getMenu(),
             this.menuService.getListCategory(),
+            this.tableService.getListTable(),
+            this.orderService.getListServing(),
         ]).subscribe({
             next: (res) => {
                 this.listFood = res[0];
                 this.category = res[1];
+                this.tables = res[2];
+                this.listServing = res[3];
+                this.listServing.forEach(
+                    (item) =>
+                        (item.serving['tables'] = item.tables.map(
+                            (item) => item.tableNumber
+                        ))
+                );
             },
         });
     }
@@ -202,7 +97,7 @@ export class OrderComponent implements OnInit {
     confirmDeleteSelected() {
         this.deleteProductsDialog = false;
         this.tables = this.tables.filter(
-            (val) => !this.selectedProducts.includes(val)
+            (val) => !this.selectedTables.includes(val)
         );
         this.messageService.add({
             severity: 'success',
@@ -210,7 +105,7 @@ export class OrderComponent implements OnInit {
             detail: 'Products Deleted',
             life: 3000,
         });
-        this.selectedProducts = [];
+        this.selectedTables = [];
     }
 
     confirmDelete() {
@@ -242,7 +137,30 @@ export class OrderComponent implements OnInit {
         return index;
     }
 
-    createOrder() {}
+    createOrder() {
+        const user = this.storageSerive.getItemLocal('user');
+        console.log(user);
+        const createdBy = user.accountId;
+        const diningTableIds = this.selectedTables.map((item) => item.tableId);
+        this.orderService
+            .createServing(createdBy, 4, new Date(), diningTableIds)
+            .subscribe({
+                next: (res: any) => {
+                    this.messageService.add({
+                        key: 'toast',
+                        severity: 'success',
+                        detail: 'Create success',
+                    });
+                },
+                error: (err) => {
+                    this.messageService.add({
+                        key: 'toast',
+                        severity: 'error',
+                        detail: err.error.message,
+                    });
+                },
+            });
+    }
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal(
@@ -257,12 +175,15 @@ export class OrderComponent implements OnInit {
 
     getSeverity(status) {
         switch (status) {
-            case 'Preparing':
-                return 'Warning';
-            case 'Occupied':
+            case 'PREPARING':
+            case 'PROCESSING':
+                return 'info';
+            case 'OCCUPIED':
                 return 'danger';
-            default:
+            case 'AVAILABLE':
                 return 'success';
+            default:
+                return 'warning';
         }
     }
 
@@ -282,5 +203,50 @@ export class OrderComponent implements OnInit {
     getCategoryName(id) {
         const cate = this.category.find((cate) => cate.categoryId === id);
         return cate ? cate.categoryName : '';
+    }
+
+    onServingSelect(ser) {
+        this.selectedServing = ser;
+        this.orderService.getServingDetail(ser.serving.servingId).subscribe({
+            next: (res: any) => {
+                console.log(res);
+                this.servingDetail = res.data.servingResult.foodOrder;
+                this.totalPrice = res.data.totalPrice;
+                console.log(this.servingDetail);
+            },
+            error: (err) => {
+                console.log(err.error);
+            },
+        });
+    }
+
+    orderFood(food) {
+        console.log(food);
+        const params = {
+            foodId: food.foodId,
+            servingId: this.selectedServing.serving.servingId,
+            quantity: 1,
+            note: '',
+            price: food.price,
+        };
+        this.listFoodOrder.push(params);
+        this.orderService
+            .createOrderFood(
+                this.selectedServing.serving.servingId,
+                this.listFoodOrder
+            )
+            .subscribe({
+                next: (res) => {
+                    this.messageService.add({
+                        key: 'toast',
+                        severity: 'success',
+                        detail: 'Add food',
+                    });
+                    this.listFoodOrder = [];
+                },
+                error: (err) => {
+                    console.log(err.error);
+                },
+            });
     }
 }

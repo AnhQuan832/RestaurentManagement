@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { LoginService } from 'src/app/services/login.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -17,6 +18,7 @@ import { StorageService } from 'src/app/services/storage.service';
             }
         `,
     ],
+    providers: [MessageService],
 })
 export class LoginComponent implements OnInit {
     valCheck: string[] = ['remember'];
@@ -29,29 +31,41 @@ export class LoginComponent implements OnInit {
         public layoutService: LayoutService,
         private loginService: LoginService,
         private router: Router,
-        private storageService: StorageService
+        private storageService: StorageService,
+        private msg: MessageService
     ) {}
     ngOnInit(): void {
         localStorage.clear();
     }
 
     login() {
-        this.router.navigate(['']);
-
         this.isSubmitted = true;
         if (this.email && this.password)
             this.loginService.login(this.email, this.password).subscribe({
-                next: (res) => {
-                    if (res) {
-                        this.storageService.setItemLocal('user', res);
+                next: (res: any) => {
+                    console.log(res);
+                    if (res.statusCode == 200) {
+                        this.storageService.setItemLocal('user', res.data);
                         this.storageService.setTimeResetTokenCookie(
                             'jwtToken',
-                            res.accessToken
+                            res.data.accessToken
                         );
                         this.router.navigate(['']);
+                    } else {
+                        this.msg.add({
+                            key: 'toast',
+                            severity: 'error',
+                            detail: 'Wrong data',
+                        });
                     }
                 },
-                error: (err) => console.log(err),
+                error: (err) => {
+                    this.msg.add({
+                        key: 'toast',
+                        severity: 'error',
+                        detail: err.error.message,
+                    });
+                },
             });
     }
 }

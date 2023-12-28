@@ -22,8 +22,7 @@
                 [value]="listTable"
                 [paginator]="true"
                 [rows]="10"
-                lazy="true"
-                [globalFilterFields]="['name', 'price']"
+                [globalFilterFields]="['tableNumber', 'capacity', 'status']"
             >
                 <ng-template pTemplate="caption">
                     <div
@@ -59,7 +58,12 @@
                             {{ row.capacity }}
                         </td>
 
-                        <td>{{ row.status }}</td>
+                        <td>
+                            <p-tag
+                                [value]="row.status"
+                                [severity]="getSeverity(row.status)"
+                            ></p-tag>
+                        </td>
                         <td class="text-end">
                             <button
                                 class="me-4"
@@ -69,14 +73,11 @@
                                 (click)="viewDetails(row)"
                             ></button>
                             <button
-                                [disabled]="row.isBlock"
+                                [disabled]="row.status !== 'AVAILABLE'"
                                 pButton
+                                class="p-button-outlined p-button-danger"
                                 type="button"
-                                [icon]="
-                                    row.isBlock
-                                        ? 'pi pi-lock-open'
-                                        : 'pi pi-lock'
-                                "
+                                [icon]="'pi pi-trash'"
                                 (click)="lockTable(row)"
                             ></button>
                         </td>

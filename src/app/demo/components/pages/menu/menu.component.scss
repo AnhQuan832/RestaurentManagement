@@ -116,7 +116,8 @@ p-sidebar {
     > div,
     input,
     .p-inputwrapper,
-    .p-dropdown {
+    .p-dropdown,
+    .p-multiselect {
         position: absolute;
         left: 160px;
         width: 250px !important;
@@ -127,14 +128,18 @@ p-sidebar {
 :host::ng-deep {
     .p-dropdown,
     .p-inputnumber-input,
-    .p-calendar {
+    .p-calendar,
+    .p-multiselect {
         height: 32px !important;
         width: 250px !important;
     }
     .p-inputtext,
-    .p-dropdown-label {
+    .p-dropdown-label,
+    .p-multiselect-label {
         display: flex !important;
         align-items: center;
+        height: 32px;
+        width: 250px !important;
     }
 }
 

@@ -21,12 +21,14 @@ export class OrderComponent implements OnInit {
 
     deleteProductsDialog: boolean = false;
     statuses = [
-        { label: 'Available', value: 'Available' },
-        { label: 'Occupied', value: 'Occupied' },
-        { label: 'Preparing', value: 'Preparing' },
+        { label: 'Available', value: 'AVAILABLE' },
+        { label: 'Occupied', value: 'OCCUPIED' },
+        { label: 'Preparing', value: 'PREPARING' },
     ];
+    tableStatus = ['AVAILABLE', 'OCCUPIED', 'PREPARING'];
+    orderStatus = ['PENDING', 'PROCESSING', 'SERVED'];
     tables;
-
+    selectedStatus;
     listServing;
     listFoodOrder = [];
     listFood;
@@ -36,7 +38,8 @@ export class OrderComponent implements OnInit {
     servingDetail;
     totalPrice;
     selectedTables: any[] = [];
-
+    qty = 1;
+    note;
     submitted: boolean = false;
 
     rowsPerPageOptions = [5, 10, 20];
@@ -151,6 +154,8 @@ export class OrderComponent implements OnInit {
                         severity: 'success',
                         detail: 'Create success',
                     });
+                    this.getListTable();
+                    this.selectedTables = null;
                 },
                 error: (err) => {
                     this.messageService.add({
@@ -181,6 +186,7 @@ export class OrderComponent implements OnInit {
             case 'OCCUPIED':
                 return 'danger';
             case 'AVAILABLE':
+            case 'SERVED':
                 return 'success';
             default:
                 return 'warning';
@@ -207,7 +213,11 @@ export class OrderComponent implements OnInit {
 
     onServingSelect(ser) {
         this.selectedServing = ser;
-        this.orderService.getServingDetail(ser.serving.servingId).subscribe({
+        this.getOrderDetail(ser.serving.servingId);
+    }
+
+    getOrderDetail(id) {
+        this.orderService.getServingDetail(id).subscribe({
             next: (res: any) => {
                 console.log(res);
                 this.servingDetail = res.data.servingResult.foodOrder;
@@ -220,13 +230,13 @@ export class OrderComponent implements OnInit {
         });
     }
 
-    orderFood(food) {
+    orderFood(food, qty, note?) {
         console.log(food);
         const params = {
             foodId: food.foodId,
             servingId: this.selectedServing.serving.servingId,
-            quantity: 1,
-            note: '',
+            quantity: qty,
+            note: note,
             price: food.price,
         };
         this.listFoodOrder.push(params);
@@ -240,13 +250,84 @@ export class OrderComponent implements OnInit {
                     this.messageService.add({
                         key: 'toast',
                         severity: 'success',
-                        detail: 'Add food',
+                        detail: 'Add food success',
                     });
                     this.listFoodOrder = [];
+                    this.note = '';
+                    this.qty = 1;
+                    this.getOrderDetail(this.selectedServing.serving.servingId);
                 },
                 error: (err) => {
-                    console.log(err.error);
+                    this.listFoodOrder = [];
+                    this.messageService.add({
+                        key: 'toast',
+                        severity: 'error',
+                        detail: err.error.message,
+                    });
                 },
             });
+    }
+
+    updateOrderStatus(serving) {
+        console.log(this.selectedStatus);
+        this.orderService
+            .updateOrderFood(serving.foodOrderId, this.selectedStatus)
+            .subscribe({
+                next: (res) => {
+                    serving.status = this.selectedStatus;
+                    this.getOrderDetail(this.selectedServing.serving.servingId);
+                },
+            });
+    }
+
+    checkOut() {
+        this.orderService
+            .createBill(this.selectedServing.serving.servingId)
+            .subscribe({
+                next: (res) => {
+                    this.messageService.add({
+                        key: 'toast',
+                        severity: 'success',
+                        detail: 'Checkout success',
+                    });
+                    this.selectedServing = null;
+                    this.getListServing();
+                },
+                error: (err) => {
+                    this.messageService.add({
+                        key: 'toast',
+                        severity: 'error',
+                        detail: err.error.message,
+                    });
+                },
+            });
+    }
+
+    updateTableStatus(table) {
+        this.tableService.updateInfo(table).subscribe({
+            next: (res) => {},
+        });
+    }
+
+    getListServing() {
+        this.orderService.getListServing().subscribe({
+            next: (res) => {
+                this.listServing = res;
+                this.listServing.forEach(
+                    (item) =>
+                        (item.serving['tables'] = item.tables.map(
+                            (item) => item.tableNumber
+                        ))
+                );
+            },
+        });
+    }
+
+    getListTable() {
+        this.tableService.getListTable().subscribe({
+            next: (res) => {
+                this.tables = res;
+            },
+        });
     }
 }

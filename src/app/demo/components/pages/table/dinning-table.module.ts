@@ -17,6 +17,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
     declarations: [TableComponent],
@@ -35,6 +36,7 @@ import { TableModule } from 'primeng/table';
         ToastModule,
         InputNumberModule,
         OverlayPanelModule,
+        TagModule,
     ],
     providers: [MessageService, DialogService],
 })

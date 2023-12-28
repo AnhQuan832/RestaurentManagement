@@ -13,23 +13,10 @@ export class LoginService {
     constructor(private http: HttpClient) {}
 
     login(userEmail, userPassword) {
-        return this.http
-            .post(API.AUTHENTICATE.LOGIN, {
-                email: userEmail,
-                password: userPassword,
-            })
-            .pipe(
-                map((data: any) => {
-                    if (data.statusCode === 200) {
-                        return data.data;
-                    } else {
-                        return false;
-                    }
-                }),
-                catchError((err) => {
-                    throw new Error(err);
-                })
-            );
+        return this.http.post(API.AUTHENTICATE.LOGIN, {
+            email: userEmail,
+            password: userPassword,
+        });
     }
 
     setRoles(userRoles: []) {

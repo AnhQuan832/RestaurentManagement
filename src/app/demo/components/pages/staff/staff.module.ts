@@ -17,6 +17,9 @@ import { StaffComponent } from './staff.component';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CalendarModule } from 'primeng/calendar';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { PasswordModule } from 'primeng/password';
+import { TagModule } from 'primeng/tag';
 @NgModule({
     declarations: [StaffComponent],
     imports: [
@@ -35,6 +38,9 @@ import { CalendarModule } from 'primeng/calendar';
         InputNumberModule,
         OverlayPanelModule,
         CalendarModule,
+        MultiSelectModule,
+        PasswordModule,
+        TagModule,
     ],
     providers: [MessageService, DialogService],
 })

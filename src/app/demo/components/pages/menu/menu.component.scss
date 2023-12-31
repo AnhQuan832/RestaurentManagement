@@ -113,15 +113,24 @@ p-sidebar {
 .row-type {
     display: flex;
     margin-top: 2rem;
+    label {
+        width: 160px;
+    }
     > div,
     input,
     .p-inputwrapper,
     .p-dropdown,
     .p-multiselect {
-        position: absolute;
+        // position: absolute;
         left: 160px;
         width: 250px !important;
         height: 32px;
+    }
+    > .p-inputtextarea {
+        // position: absolute;
+        left: 160px;
+        width: 250px !important;
+        height: auto !important;
     }
 }
 

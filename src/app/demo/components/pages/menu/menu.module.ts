@@ -15,6 +15,7 @@ import { Toast, ToastModule } from 'primeng/toast';
 import { InputNumber, InputNumberModule } from 'primeng/inputnumber';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TagModule } from 'primeng/tag';
+import { InputTextarea, InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
     declarations: [MenuComponent],
@@ -34,6 +35,7 @@ import { TagModule } from 'primeng/tag';
         InputNumberModule,
         OverlayPanelModule,
         TagModule,
+        InputTextareaModule,
     ],
 })
 export class MenuModule {}

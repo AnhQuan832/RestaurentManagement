@@ -101,12 +101,13 @@
     </ng-template>
     <div
         *ngIf="displaySidebar"
-        class="position-relative h-75"
+        class="position-relative h-100"
         [formGroup]="addDish"
     >
         <div
             *ngIf="isLoading"
-            class="loading w-100 h-100 position-absolute d-flex d-flex justify-content-center align-items-center flex-column gap-2 bg-body rounded-3 z-3"
+            class="loading w-100 h-100 position-absolute d-flex d-flex justify-content-center align-items-center flex-column gap-2 bg-body rounded-3 z-100"
+            style="z-index: 100"
         >
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
@@ -178,16 +179,29 @@
             >
             </p-inputNumber>
         </div>
+
         <div class="row-type">
             <label for="status">Status:</label>
-            <input
-                pInputText
-                type="text"
-                formControlName="status"
-                id="status"
-            />
+            <!--
             <p-dropdown [options]="status" formControlName="status">
+            </p-dropdown> -->
+            <p-dropdown
+                [options]="status"
+                optionLabel="label"
+                optionValue="value"
+                formControlName="status"
+            >
             </p-dropdown>
+        </div>
+        <div class="row-type">
+            <label for="price">Recipe:</label>
+            <textarea
+                rows="5"
+                cols="30"
+                placeholder="Recipe ..."
+                pInputTextarea
+                formControlName="recipe"
+            ></textarea>
         </div>
     </div>
 </p-sidebar>

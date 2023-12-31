@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { API } from '../constant/enum';
 import { catchError, map } from 'rxjs';
+import { StorageService } from './storage.service';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -10,7 +11,7 @@ const httpOptions = {
     providedIn: 'root',
 })
 export class LoginService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private strSrv: StorageService) {}
 
     login(userEmail, userPassword) {
         return this.http.post(API.AUTHENTICATE.LOGIN, {
@@ -40,5 +41,16 @@ export class LoginService {
         if (userRoles != null && userRoles)
             if (userRoles.includes(allowedRoles[0])) return true;
         return false;
+    }
+
+    changePass(data) {
+        return this.http.put(
+            API.AUTHENTICATE.CHANGE_PASS,
+            {
+                password: data.password,
+                newPassword: data.newPassword,
+            },
+            { headers: this.strSrv.getHttpHeader() }
+        );
     }
 }

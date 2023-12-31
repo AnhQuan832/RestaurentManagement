@@ -155,7 +155,7 @@ export class OrderComponent implements OnInit {
                         detail: 'Create success',
                     });
                     this.getListTable();
-                    this.selectedTables = null;
+                    this.selectedTables = [];
                 },
                 error: (err) => {
                     this.messageService.add({
@@ -280,16 +280,17 @@ export class OrderComponent implements OnInit {
             });
     }
 
-    checkOut() {
+    checkOut(onlinePayment?) {
         this.orderService
             .createBill(this.selectedServing.serving.servingId)
             .subscribe({
                 next: (res) => {
-                    this.messageService.add({
-                        key: 'toast',
-                        severity: 'success',
-                        detail: 'Checkout success',
-                    });
+                    if (!onlinePayment)
+                        this.messageService.add({
+                            key: 'toast',
+                            severity: 'success',
+                            detail: 'Checkout success',
+                        });
                     this.selectedServing = null;
                     this.getListServing();
                 },
@@ -301,6 +302,18 @@ export class OrderComponent implements OnInit {
                     });
                 },
             });
+        if (onlinePayment) {
+            this.orderService
+                .createOnlinePayment(
+                    this.selectedServing.serving.servingId,
+                    this.totalPrice
+                )
+                .subscribe({
+                    next: (res) => {
+                        window.location.href = res;
+                    },
+                });
+        }
     }
 
     updateTableStatus(table) {

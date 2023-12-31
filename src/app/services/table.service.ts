@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, catchError } from 'rxjs';
 import { API } from '../constant/enum';
+import { StorageService } from './storage.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TableService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private strSrv: StorageService) {}
 
     getListTable() {
         return this.http.get(API.TABLE.GET_TABLE).pipe(
@@ -25,18 +26,28 @@ export class TableService {
     }
 
     addNewTable(data) {
-        return this.http.post(API.TABLE.CREATE_TABLE, data).pipe(
-            map((data: any) => {
-                if (data.statusCode === 200) {
-                    return data.data;
-                } else {
-                    throw new Error(data.errorMessage);
-                }
-            }),
-            catchError((err) => {
-                throw new Error(err);
+        delete data.tableId;
+        delete data.status;
+        const params = {
+            createdBy: this.strSrv.getItemLocal('user').accountId,
+            ...data,
+        };
+        return this.http
+            .post(API.TABLE.CREATE_TABLE, params, {
+                headers: this.strSrv.getHttpHeader(),
             })
-        );
+            .pipe(
+                map((data: any) => {
+                    if (data.statusCode === 200) {
+                        return data.data;
+                    } else {
+                        throw new Error(data.errorMessage);
+                    }
+                }),
+                catchError((err) => {
+                    throw new Error(err);
+                })
+            );
     }
 
     updateInfo(data) {

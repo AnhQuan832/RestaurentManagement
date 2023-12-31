@@ -10,7 +10,7 @@
                             pRipple
                             label="Add new account"
                             icon="pi pi-plus"
-                            (click)="viewDetails({})"
+                            (click)="viewDetails()"
                             class="p-button-success"
                         ></button>
                     </div>
@@ -86,12 +86,8 @@
                                 pButton
                                 type="button"
                                 class="p-button-outlined p-button-danger"
-                                [icon]="
-                                    row.isBlock
-                                        ? 'pi pi-lock-open'
-                                        : 'pi pi-lock'
-                                "
-                                (click)="lockAccount(row)"
+                                [icon]="'pi pi-trash'"
+                                (click)="deleteAccount(row)"
                             ></button>
                         </td>
                     </tr>
@@ -108,14 +104,17 @@
 >
     <ng-template pTemplate="header">
         <p-button
-            [label]="account.accountId ? 'Save' : 'Create'"
-            [disabled]="addAccount.invalid"
-            (click)="saveEditedAccount()"
+            [label]="account?.accountId ? 'Save' : 'Create'"
+            [disabled]="
+                addAccount.invalid ||
+                (!addAccount.value.password && account && !account?.accountId)
+            "
+            (onClick)="saveEditedAccount()"
         ></p-button>
     </ng-template>
     <div
         *ngIf="displaySidebar"
-        class="position-relative h-75"
+        class="position-relative h-100"
         [formGroup]="addAccount"
     >
         <div
@@ -140,7 +139,7 @@
                     />
                     <img
                         [src]="
-                            account.avatar ||
+                            account?.avatar ||
                             'https://res.cloudinary.com/dwskvqnkc/image/upload/v1698909675/menu_minder_store/img_default_elml1l.jpg'
                         "
                         alt=""
@@ -161,7 +160,7 @@
             <input pInputText type="email" formControlName="email" id="email" />
         </div>
 
-        <div class="row-type">
+        <div class="row-type" *ngIf="!account?.accountId">
             <label for="password">Password:</label>
             <p-password
                 formControlName="password"
@@ -199,7 +198,7 @@
             ></p-calendar>
         </div> -->
         <div class="row-type">
-            <label for="role">Role:</label>
+            <label for="role">Permission:</label>
 
             <p-multiSelect
                 styleClass="flex-center"

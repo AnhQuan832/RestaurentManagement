@@ -23,7 +23,7 @@ export class StaffService {
                     if (data.statusCode === 200) {
                         return data.data;
                     } else {
-                        throw new Error(data.meta);
+                        return [];
                     }
                 }),
                 catchError((err) => {
@@ -33,41 +33,15 @@ export class StaffService {
     }
 
     addNewStaff(data) {
-        return this.http
-            .post(API.ACCOUNT.GET + '/create', data, {
-                headers: this.storageService.getHttpHeader(),
-            })
-            .pipe(
-                map((data: any) => {
-                    if (data.statusCode === 200) {
-                        return data.data;
-                    } else {
-                        throw new Error(data.errorMessage);
-                    }
-                }),
-                catchError((err) => {
-                    throw new Error(err);
-                })
-            );
+        return this.http.post(API.ACCOUNT.GET + '/create', data, {
+            headers: this.storageService.getHttpHeader(),
+        });
     }
 
     updateInfo(data) {
-        return this.http
-            .put(API.ACCOUNT.GET + `/${data.accountId}`, data, {
-                headers: this.storageService.getHttpHeader(),
-            })
-            .pipe(
-                map((data: any) => {
-                    if (data.statusCode === 200) {
-                        return data.data;
-                    } else {
-                        throw new Error(data.errorMessage);
-                    }
-                }),
-                catchError((err) => {
-                    throw new Error(err);
-                })
-            );
+        return this.http.put(API.ACCOUNT.GET + `/${data.accountId}`, data, {
+            headers: this.storageService.getHttpHeader(),
+        });
     }
 
     getDetail(email) {
@@ -80,7 +54,7 @@ export class StaffService {
                     if (data.statusCode === 200) {
                         return data.data;
                     } else {
-                        throw new Error(data.errorMessage);
+                        return [];
                     }
                 }),
                 catchError((err) => {
@@ -99,7 +73,7 @@ export class StaffService {
                     if (data.statusCode === 200) {
                         return data.data;
                     } else {
-                        throw new Error(data.errorMessage);
+                        return [];
                     }
                 }),
                 catchError((err) => {
@@ -118,7 +92,7 @@ export class StaffService {
                     if (data.statusCode === 200) {
                         return data.data;
                     } else {
-                        throw new Error(data.errorMessage);
+                        return [];
                     }
                 }),
                 catchError((err) => {

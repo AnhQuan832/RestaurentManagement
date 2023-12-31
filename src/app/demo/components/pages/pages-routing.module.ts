@@ -33,6 +33,13 @@ import { RouterModule } from '@angular/router';
                         (m) => m.DiningTableModule
                     ),
             },
+            {
+                path: 'change-password',
+                loadChildren: () =>
+                    import('./change-password/change-password.module').then(
+                        (m) => m.ChangePasswordModule
+                    ),
+            },
             { path: '**', redirectTo: '/notfound' },
         ]),
     ],

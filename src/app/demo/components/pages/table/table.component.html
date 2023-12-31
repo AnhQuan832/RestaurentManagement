@@ -10,7 +10,7 @@
                             pRipple
                             label="Add new table"
                             icon="pi pi-plus"
-                            (click)="viewDetails({})"
+                            (click)="viewDetails()"
                             class="p-button-success"
                         ></button>
                     </div>
@@ -95,7 +95,7 @@
 >
     <ng-template pTemplate="header">
         <p-button
-            [label]="table.tableId ? 'Save' : 'Create'"
+            [label]="table?.tableId ? 'Save' : 'Create'"
             [disabled]="addTable.invalid"
             (click)="saveEditedTable()"
         ></p-button>
@@ -132,7 +132,7 @@
                 id="capacity"
             />
         </div>
-        <div class="row-type">
+        <div class="row-type" *ngIf="table?.tableId">
             <label for="status">Status:</label>
             <p-dropdown [options]="status" formControlName="status" id="status">
             </p-dropdown>

@@ -67,4 +67,53 @@ export class OrderService {
             }
         );
     }
+
+    getBills() {
+        return this.http
+            .get(API.BILL.GET, {
+                headers: this.storageSrv.getHttpHeader(),
+            })
+            .pipe(
+                map((data: any) => {
+                    if (data.statusCode === 200) {
+                        return data.data;
+                    } else {
+                        return data.errorMessage;
+                    }
+                }),
+                catchError((err) => {
+                    throw new Error(err);
+                })
+            );
+    }
+
+    getBillDetail(servingId) {
+        return this.http.get(API.BILL.GET + `/${servingId}`, {
+            headers: this.storageSrv.getHttpHeader(),
+        });
+    }
+
+    createOnlinePayment(content, value) {
+        return this.http
+            .put(
+                'https://doan02-be-production.up.railway.app/api/v1/payment/createPaymentLink',
+                {
+                    content: content,
+                    returnUrl: 'http://localhost:4200/#/pages/order',
+                    value: value,
+                }
+            )
+            .pipe(
+                map((data: any) => {
+                    if (data.meta.statusCode === '0_2_s') {
+                        return data.data.paymentLink;
+                    } else {
+                        return data.errorMessage;
+                    }
+                }),
+                catchError((err) => {
+                    throw new Error(err);
+                })
+            );
+    }
 }

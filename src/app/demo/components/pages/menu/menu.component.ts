@@ -17,7 +17,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class MenuComponent implements OnInit {
     @ViewChild('op') op: any;
     listDishes: any[] = [];
-    status = ['PENDING', 'HIDDEN', 'AVALABLE'];
+    // status = ['PENDING', 'HIDDEN', 'AVAILABLE'];
+
+    status = [
+        { label: 'Available', value: 'AVAILABLE' },
+        { label: 'Pending', value: 'PENDING' },
+        { label: 'Hidden', value: 'HIDDEN' },
+    ];
     displaySidebar: boolean = false;
     dish;
     category;
@@ -45,7 +51,7 @@ export class MenuComponent implements OnInit {
             name: this.builder.control('', Validators.required),
             price: this.builder.control('', Validators.required),
             categoryId: this.builder.control('', Validators.required),
-            status: this.builder.control('PENDING', Validators.required),
+            status: this.builder.control('PENDING'),
         });
     }
 
@@ -83,7 +89,7 @@ export class MenuComponent implements OnInit {
             this.dish = _.cloneDeep(row);
             this.addDish.patchValue(this.dish);
         } else {
-            this.dish = null;
+            this.dish = [];
             this.addDish.reset();
         }
         this.displaySidebar = true;
@@ -107,9 +113,9 @@ export class MenuComponent implements OnInit {
     saveEditedDish() {
         this.isLoading = true;
 
-        this.addDish.get('image').setValue;
+        this.addDish.get('image').setValue(this.dish.image);
         if (this.dish.foodId)
-            this.menuService.updateFood(this.dish).subscribe({
+            this.menuService.updateFood(this.addDish.value).subscribe({
                 next: (res) => {
                     this.isLoading = false;
 
@@ -121,19 +127,35 @@ export class MenuComponent implements OnInit {
                     this.displaySidebar = false;
                     this.getData();
                 },
+                error: (err) => {
+                    this.message.add({
+                        key: 'toast',
+                        severity: 'error',
+                        detail: 'Update fail',
+                    });
+                    this.isLoading = false;
+                },
             });
         else
-            this.menuService.createFood(this.dish).subscribe({
+            this.menuService.createFood(this.addDish.value).subscribe({
                 next: (res) => {
                     this.isLoading = false;
 
                     this.message.add({
                         key: 'toast',
                         severity: 'success',
-                        detail: 'Updated',
+                        detail: 'Add success',
                     });
                     this.displaySidebar = false;
                     this.getData();
+                },
+                error: (err) => {
+                    this.message.add({
+                        key: 'toast',
+                        severity: 'error',
+                        detail: 'Add fail',
+                    });
+                    this.isLoading = false;
                 },
             });
     }

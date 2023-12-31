@@ -334,6 +334,7 @@
                                 <p-inputNumber
                                     [(ngModel)]="qty"
                                     [showButtons]="true"
+                                    min="1"
                                     buttonLayout="horizontal"
                                     spinnerMode="horizontal"
                                     decrementButtonClass="p-button-secondary"
@@ -435,7 +436,7 @@
                     </ng-template>
                     <ng-template pTemplate="summary">
                         <div
-                            class="d-flex align-items-center justify-content-end"
+                            class="d-flex align-items-center justify-content-end gap-2"
                         >
                             <p
                                 class="text-center pe-4 mb-0"
@@ -443,10 +444,16 @@
                             >
                                 Total: {{ totalPrice | currency : "VND" }}
                             </p>
+                            <!-- <button
+                                pButton
+                                pRipple
+                                label="Online Payment"
+                                (click)="checkOut(true)"
+                            ></button> -->
                             <button
                                 pButton
                                 pRipple
-                                label="Checkout"
+                                label="Check out"
                                 (click)="checkOut()"
                             ></button>
                         </div>

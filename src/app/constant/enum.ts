@@ -4,6 +4,7 @@ const API_URL = 'https://localhost:7004/api/';
 export const API = {
     AUTHENTICATE: {
         LOGIN: API_URL + 'auth/login',
+        CHANGE_PASS: API_URL + 'me/update-password',
     },
     CATEGORY: {
         GET_CATEGORY: API_URL + 'categories',
@@ -44,6 +45,7 @@ export const API = {
     },
     BILL: {
         CREATE: API_URL + 'bills/create',
+        GET: API_URL + 'bills',
     },
     RESERVATION: {
         GET: API_URL + 'reservations',
@@ -51,6 +53,10 @@ export const API = {
         CREATE: API_URL + 'reservations/create',
         UPDATE: API_URL + 'reservations/update',
         DELETE: API_URL + 'reservations/delete',
+    },
+    STATISTIC: {
+        REVENUE: API_URL + 'statistic/revenue',
+        GENERAL: API_URL + 'statistic/general',
     },
 };
 

@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
                     this.msg.add({
                         key: 'toast',
                         severity: 'error',
-                        detail: err.error.message,
+                        detail: 'Information not match',
                     });
                 },
             });

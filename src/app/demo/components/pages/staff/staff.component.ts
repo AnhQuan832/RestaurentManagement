@@ -42,6 +42,11 @@ export class StaffComponent {
             permissionName: 'Dashboard',
             permits: [],
         },
+        {
+            permissionId: 6,
+            permissionName: 'Statistic',
+            permits: [],
+        },
     ];
     gender = [
         {
@@ -78,9 +83,9 @@ export class StaffComponent {
             ),
             name: this.builder.control('', Validators.required),
             email: this.builder.control('', Validators.required),
-            password: this.builder.control('', Validators.required),
+            password: this.builder.control(''),
             // dateOfBirth: this.builder.control(null, Validators.required),
-            gender: this.builder.control(true, Validators.required),
+            gender: this.builder.control('true'),
             phoneNumber: this.builder.control('', Validators.required),
             createdAt: this.builder.control(''),
             updatedAt: this.builder.control(''),
@@ -107,7 +112,18 @@ export class StaffComponent {
     viewDetails(row: any): void {
         if (row) {
             this.account = _.cloneDeep(row);
-            this.addAccount.patchValue(this.account);
+            this.accountService.getDetail(row.accountId).subscribe({
+                next: (res) => {
+                    res.permissionIds = res.permissions.map(
+                        (item) => item.permissionId
+                    );
+                    this.addAccount.patchValue(res);
+                    this.addAccount.get('email').disable();
+                },
+            });
+        } else {
+            this.addAccount.reset();
+            this.account = [];
         }
         this.displaySidebar = true;
         // this.addAccount.get('email').disable();
@@ -130,7 +146,7 @@ export class StaffComponent {
 
     saveEditedAccount() {
         this.isLoading = true;
-        this.addAccount.get('avatar').setValue(this.logoUrl);
+        this.addAccount.get('avatar').setValue(this.account.image);
         if (this.account.accountId) {
             const data = this.addAccount.getRawValue();
             this.accountService.updateInfo(data).subscribe({
@@ -149,7 +165,7 @@ export class StaffComponent {
                     this.message.add({
                         key: 'toast',
                         severity: 'error',
-                        detail: msg,
+                        detail: msg.error.message,
                     });
                 },
             });
@@ -167,13 +183,13 @@ export class StaffComponent {
                         this.displaySidebar = false;
                         this.getData();
                     },
-                    error: (msg) => {
+                    error: (err) => {
                         this.isLoading = false;
-                        this.isLoading = false;
+                        console.log(err);
                         this.message.add({
                             key: 'toast',
                             severity: 'error',
-                            detail: msg,
+                            detail: err.error.message,
                         });
                     },
                 });
@@ -194,7 +210,20 @@ export class StaffComponent {
     }
 
     lockAccount(acc) {
-        this.accountService.deleteAccount(acc.email).subscribe({
+        this.accountService.blockAccount(acc.accountId).subscribe({
+            next: () => {
+                this.message.add({
+                    key: 'toast',
+                    severity: 'success',
+                    detail: 'Deleted',
+                });
+                this.getData();
+            },
+        });
+    }
+
+    deleteAccount(acc) {
+        this.accountService.deleteAccount(acc.accountId).subscribe({
             next: () => {
                 this.message.add({
                     key: 'toast',

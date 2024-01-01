@@ -24,7 +24,7 @@ export class StatisticService {
                     if (data.statusCode === 200) {
                         return data.data;
                     } else {
-                        throw new Error(data.meta);
+                        return [];
                     }
                 }),
                 catchError((err) => {
@@ -44,7 +44,7 @@ export class StatisticService {
                     if (data.statusCode === 200) {
                         return data.data;
                     } else {
-                        throw new Error(data.meta);
+                        return [];
                     }
                 }),
                 catchError((err) => {

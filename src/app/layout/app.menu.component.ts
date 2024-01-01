@@ -2,6 +2,7 @@ import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
 import { StorageService } from '../services/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-menu',
@@ -12,9 +13,11 @@ export class AppMenuComponent implements OnInit {
     permission = [];
     constructor(
         public layoutService: LayoutService,
-        private strSrv: StorageService
+        private strSrv: StorageService,
+        private router: Router
     ) {
         const user = this.strSrv.getItemLocal('user');
+        if (!user) this.router.navigate(['/auth/login']);
         this.permission = user?.permissions.map((item) => item.permissionName);
     }
 
@@ -58,6 +61,7 @@ export class AppMenuComponent implements OnInit {
                         routerLink: ['/pages/statistic'],
                         // hide: true,
                     },
+
                     {
                         label: 'Log out',
                         icon: 'pi pi-fw pi-sign-in',
@@ -72,6 +76,14 @@ export class AppMenuComponent implements OnInit {
         this.model[0].items.forEach((item) => {
             if (this.permission?.includes(item.label)) menu.push(item);
         });
+        const user = this.strSrv.getItemLocal('user');
+        if (user)
+            menu.push({
+                label: 'Change password',
+                icon: 'pi pi-fw pi-key',
+                routerLink: ['/pages/change-password'],
+                // hide: true,
+            });
         menu.push({
             label: 'Log out',
             icon: 'pi pi-fw pi-sign-in',

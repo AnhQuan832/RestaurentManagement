@@ -28,6 +28,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        const token = this.storageService.getDataFromCookie('jwtToken');
+        if (!token) this.router.navigate(['/auth/login']);
         const params = {
             fromDate: moment()
                 .clone()
@@ -55,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             '--text-color-secondary'
         );
         const reportTime = data.map((i) =>
-            moment(i.reportTime).format('DD/MM')
+            moment(i.reportDate).format('DD/MM')
         );
         const value = data.map((item) => item.totalRevenue);
         this.lineData = {

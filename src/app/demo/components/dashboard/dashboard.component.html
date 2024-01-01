@@ -5,7 +5,7 @@
                 <div>
                     <span class="block text-500 font-medium mb-3">Serving</span>
                     <div class="text-900 font-medium text-xl">
-                        {{ generalData.servingCount }}
+                        {{ generalData?.servingCount || 0 }}
                     </div>
                 </div>
                 <div
@@ -25,7 +25,7 @@
                         >Customer</span
                     >
                     <div class="text-900 font-medium text-xl">
-                        {{ generalData.customerCount }}
+                        {{ generalData?.customerCount || 0 }}
                     </div>
                 </div>
                 <div
@@ -43,7 +43,7 @@
                 <div>
                     <span class="block text-500 font-medium mb-3">Rating</span>
                     <div class="text-900 font-medium text-xl">
-                        {{ generalData.restaurantRating }}
+                        {{ generalData?.restaurantRating || 0 }}
                     </div>
                 </div>
                 <div
@@ -63,7 +63,7 @@
                         >Feedbacks</span
                     >
                     <div class="text-900 font-medium text-xl">
-                        {{ generalData.feedbackCount }}
+                        {{ generalData?.feedbackCount || 0 }}
                     </div>
                 </div>
                 <div

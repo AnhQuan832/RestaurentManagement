@@ -43,9 +43,49 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Name</th>
-                        <th>Capacity</th>
-                        <th>Status</th>
+                        <th pSortableColumn="tableNumber">
+                            Table
+                            <p-sortIcon field="tableNumber"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="capacity">
+                            Capacity
+                            <p-sortIcon field="capacity"></p-sortIcon>
+                        </th>
+                        <th>
+                            Status
+                            <p-columnFilter
+                                field="status"
+                                matchMode="equals"
+                                display="menu"
+                                [showMatchModes]="false"
+                                [showOperator]="false"
+                                [showAddButton]="false"
+                            >
+                                <ng-template
+                                    pTemplate="filter"
+                                    let-value
+                                    let-filter="filterCallback"
+                                >
+                                    <p-dropdown
+                                        [ngModel]="value"
+                                        [options]="status"
+                                        (onChange)="filter($event.value)"
+                                        placeholder="Any"
+                                        [style]="{ 'min-width': '12rem' }"
+                                    >
+                                        <ng-template
+                                            let-option
+                                            pTemplate="item"
+                                        >
+                                            <p-tag
+                                                [value]="option"
+                                                [severity]="getSeverity(option)"
+                                            ></p-tag>
+                                        </ng-template>
+                                    </p-dropdown>
+                                </ng-template>
+                            </p-columnFilter>
+                        </th>
                         <th></th>
 
                         <!-- <th>Approved</th> -->
@@ -97,7 +137,7 @@
         <p-button
             [label]="table?.tableId ? 'Save' : 'Create'"
             [disabled]="addTable.invalid"
-            (click)="saveEditedTable()"
+            (onClick)="saveEditedTable()"
         ></p-button>
     </ng-template>
     <div

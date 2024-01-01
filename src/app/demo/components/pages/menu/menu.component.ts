@@ -220,6 +220,7 @@ export class MenuComponent implements OnInit {
             case 'PROCESSING':
                 return 'info';
             case 'OCCUPIED':
+            case 'HIDDEN':
                 return 'danger';
             case 'AVAILABLE':
                 return 'success';

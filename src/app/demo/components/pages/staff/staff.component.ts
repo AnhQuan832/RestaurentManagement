@@ -32,11 +32,11 @@ export class StaffComponent {
             permissionName: 'Table',
             permits: [],
         },
-        {
-            permissionId: 4,
-            permissionName: 'Staff',
-            permits: [],
-        },
+        // {
+        //     permissionId: 4,
+        //     permissionName: 'Staff',
+        //     permits: [],
+        // },
         {
             permissionId: 5,
             permissionName: 'Dashboard',

@@ -36,6 +36,9 @@ export class LoginComponent implements OnInit {
     ) {}
     ngOnInit(): void {
         localStorage.clear();
+        sessionStorage.clear();
+        document.cookie =
+            'jwtToken' + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     }
 
     login() {

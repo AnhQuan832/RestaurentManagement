@@ -101,7 +101,7 @@
                                     <p-dropdown
                                         [ngModel]="value"
                                         [options]="statuses"
-                                        (onChange)="filter($event.value)"
+                                        (onChange)="filter($event)"
                                         placeholder="Any"
                                         [style]="{ 'min-width': '12rem' }"
                                     >
@@ -110,10 +110,8 @@
                                             pTemplate="item"
                                         >
                                             <p-tag
-                                                [value]="option.value"
-                                                [severity]="
-                                                    getSeverity(option.value)
-                                                "
+                                                [value]="option"
+                                                [severity]="getSeverity(option)"
                                             ></p-tag>
                                         </ng-template>
                                     </p-dropdown>
@@ -212,7 +210,10 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>ID</th>
-                        <th>Time in</th>
+                        <th pSortableColumn="timeIn">
+                            Time In
+                            <p-sortIcon field="timeIn"></p-sortIcon>
+                        </th>
                         <th>Table</th>
                     </tr>
                 </ng-template>
@@ -444,16 +445,16 @@
                             >
                                 Total: {{ totalPrice | currency : "VND" }}
                             </p>
-                            <!-- <button
+                            <button
                                 pButton
                                 pRipple
                                 label="Online Payment"
                                 (click)="checkOut(true)"
-                            ></button> -->
+                            ></button>
                             <button
                                 pButton
                                 pRipple
-                                label="Check out"
+                                label="Cash"
                                 (click)="checkOut()"
                             ></button>
                         </div>

@@ -210,9 +210,9 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>ID</th>
-                        <th pSortableColumn="timeIn">
+                        <th pSortableColumn="serving.timeIn">
                             Time In
-                            <p-sortIcon field="timeIn"></p-sortIcon>
+                            <p-sortIcon field="serving.timeIn"></p-sortIcon>
                         </th>
                         <th>Table</th>
                     </tr>
@@ -448,7 +448,7 @@
                             <button
                                 pButton
                                 pRipple
-                                label="Online Payment"
+                                label="Credit card"
                                 (click)="checkOut(true)"
                             ></button>
                             <button

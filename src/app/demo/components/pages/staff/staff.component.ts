@@ -196,17 +196,26 @@ export class StaffComponent {
     }
 
     async selectedAvatar(event) {
-        this.isLoading = true;
         this.avatarFile = event.target.files;
-        const imgInput = <HTMLImageElement>document.getElementById('imgInput');
-        await this.fileuploadService.pushFileToStorage(
-            this.avatarFile[0],
-            'Avatars'
-        );
-        this.isLoading = false;
-
-        this.account.image = this.fileuploadService.getdownloadURL();
-        imgInput.src = URL.createObjectURL(this.avatarFile[0]);
+        if (this.avatarFile[0].type == 'image/jpeg') {
+            this.isLoading = true;
+            const imgInput = <HTMLImageElement>(
+                document.getElementById('imgInput')
+            );
+            await this.fileuploadService.pushFileToStorage(
+                this.avatarFile[0],
+                'Avatars'
+            );
+            this.isLoading = false;
+            this.account.image = this.fileuploadService.getdownloadURL();
+            imgInput.src = URL.createObjectURL(this.avatarFile[0]);
+        } else {
+            this.message.add({
+                key: 'toast',
+                severity: 'error',
+                detail: 'Please choose image type file',
+            });
+        }
     }
 
     lockAccount(acc) {
